@@ -38,7 +38,7 @@ object UserCtrl {
 
             Cache.putUserProfile(UserProfile(user, quarterCommitCount, langRepoCount, langStarCount, langCommitCount, repoCommitCount))
         }
-        return Cache.getUserInfo(username)!!
+        return Cache.getUserProfile(username)!!
     }
 
     fun userExists(username: String?) = try {
