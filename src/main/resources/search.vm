@@ -9,4 +9,7 @@
             <h4>Couldn't find user <span class="search-term">$q</span></h4>
         #end
     </div>
+    <script>
+        document.querySelector("input").focus();
+    </script>
 #end
