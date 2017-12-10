@@ -14,7 +14,7 @@ object UserCtrl {
     // https://javadoc.io/doc/org.eclipse.mylyn.github/org.eclipse.egit.github.core/2.1.5
 
     private val client = GitHubClient().apply {
-        setOAuth2Token("OAUTH_TOKEN")
+        setOAuth2Token(System.getenv("OAUTH_TOKEN"))
     }
 
     private val repoService = RepositoryService(client)
