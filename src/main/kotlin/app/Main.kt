@@ -3,8 +3,13 @@ package app
 import app.util.Heroku
 import io.javalin.Javalin
 import io.javalin.translator.template.TemplateUtil.model
+import org.slf4j.LoggerFactory
+
+class Main {} // dummy class for logging
 
 fun main(args: Array<String>) {
+
+    val log = LoggerFactory.getLogger(Main::class.java)
 
     val app = Javalin.create().apply {
         port(Heroku.getPort() ?: 7070)
@@ -34,7 +39,10 @@ fun main(args: Array<String>) {
         }
     }
 
-    app.exception(Exception::class.java) { e, ctx -> ctx.status(500) }
+    app.exception(Exception::class.java) { e, ctx ->
+        log.warn("Uncaught exception", e)
+        ctx.status(500)
+    }
 
 }
 
