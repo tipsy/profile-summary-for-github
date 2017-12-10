@@ -74,7 +74,7 @@ body {
 }
 
 .chart-row {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid rgba(0, 0, 0, 0.1)
 }
 
 .chart-container {
@@ -86,10 +86,11 @@ body {
     width: 33%;
 }
 
-@media(max-width: 900px) {
+@media (max-width: 900px) {
     .chart-container--third {
         width: 100%;
     }
+
     .commits-per-quarter {
         display: none;
     }
