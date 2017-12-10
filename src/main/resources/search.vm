@@ -6,7 +6,7 @@
             <input type="text" name="q" placeholder="ex. 'tipsy'">
         </form>
         #if($q != "")
-            <h4>Couldn't find user '$q'</h4>
+            <h4>Couldn't find user <span class="search-term">$q</span></h4>
         #end
     </div>
 #end
