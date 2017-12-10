@@ -45,7 +45,7 @@ object UserCtrl {
 
     fun userExists(username: String) = try {
         userService.getUser(username) != null
-    } catch (e: RequestException) {
+    } catch (e: Exception) {
         false
     }
 
