@@ -16,9 +16,14 @@
         <style>#include("/static/style.css")</style>
     </head>
     <body data-user-id="$user">
-        <div class="content">
+        <main class="content">
             $bodyContent
-        </div>
+        </main>
+        <footer>
+            GitHub profile summary is built with <a href="https://javalin.io">javalin</a> <small>(kotlin web framework)</small> and
+            <a href="http://www.chartjs.org/docs/latest/" target="_blank">chart.js</a> <small>(visualization)</small>.
+            Source is on <a href="https://github.com/tipsy/github-profile-summary" target="_blank">GitHub</a>.
+        </footer>
     </body>
 </html>
 #end

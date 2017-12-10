@@ -27,6 +27,22 @@ body {
     margin: 0;
 }
 
+footer {
+    font-size: 16px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 30px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    background: #eee9df;
+}
+
+footer a {
+    font-weight: 700;
+}
+
 .search-screen {
     display: flex;
     flex-direction: column;
