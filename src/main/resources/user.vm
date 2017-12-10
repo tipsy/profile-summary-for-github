@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>$user-id's GitHub profile</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.min.js"></script>
+        <script src="/charts.js"></script>
+        <link rel="stylesheet" href="/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/load-awesome@1.1.0/css/square-jelly-box.min.css">
+    </head>
+    <body data-user-id="$user-id">
+        <div class="content">
+            <div id="vue" v-cloak>
+                <div class="user-info">
+                    <img :src="user.avatarUrl" :alt="user.login" class="user-info__img">
+                    <div class="user-info__details">
+                        <div>
+                            <i class="fa fa-fw fa-user"></i>{{ user.login }}
+                            <small v-if="user.name">({{ user.name }})</small>
+                        </div>
+                        <div><i class="fa fa-fw fa-database"></i>{{ user.publicRepos }} public repos</div>
+                        <div><i class="fa fa-fw fa-clock-o"></i>Joined GitHub {{ moment(user.createdAt).fromNow() }}</div>
+                        <div v-if="user.email"><i class="fa fa-fw fa-envelope"></i> {{ user.email }}</div>
+                        <div v-if="user.company"><i class="fa fa-fw  fa-building"></i>{{ user.company }}</div>
+                        <div><i class="fa fa-fw fa-external-link"></i><a :href="user.htmlUrl" target="_blank">View profile on GitHub</a></div>
+                    </div>
+                    <div class="chart-container commits-per-quarter">
+                        <canvas id="quarterCommitCount"></canvas>
+                    </div>
+                </div>
+                <div class="charts">
+                    <div class="chart-row">
+                        <div class="chart-container chart-container--third">
+                            <h2>Repos per Language</h2>
+                            <canvas id="langRepoCount"></canvas>
+                        </div>
+                        <div class="chart-container chart-container--third">
+                            <h2>Stars per Language</h2>
+                            <canvas id="langStarCount"></canvas>
+                        </div>
+                        <div class="chart-container chart-container--third">
+                            <h2>Commits per Language</h2>
+                            <canvas id="langCommitCount"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-row">
+                        <h2>Commits per Repo <small v-if="user.publicRepos > 50">(top 50)</small></h2>
+                        <canvas id="repoCommitCount"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="load-screen" style="opacity: 0">
+                <div style="color:#38abe2" class="la-square-jelly-box la-3x"><div></div><div></div></div>
+                <h2>Analyzing GitHub profile</h2>
+            </div>
+        </div>
+        <script>
+            (function () {
+                var userId = document.body.getAttribute("data-user-id");
+                var loadScreen = document.querySelector(".load-screen");
+                var loadScreenTimeout = setTimeout(showLoadScreen, 500);
+                axios.get("/api/user/" + userId).then(function (response) {
+                    cancelOrHideLoadScreen();
+                    new Vue({
+                        el: "#vue",
+                        data: {
+                            user: response.data.user
+                        },
+                        mounted: function () {
+                            lineChart("quarterCommitCount", response.data)
+                            donutChart("langRepoCount", response.data);
+                            donutChart("langStarCount", response.data);
+                            donutChart("langCommitCount", response.data);
+                            donutChart("repoCommitCount", response.data);
+                        }
+                    });
+                }).catch(function (error) {
+                    cancelOrHideLoadScreen();
+                    var content = document.querySelector(".content");
+                    if (error.response.status === 404) {
+                        return content.insertAdjacentHTML("beforeEnd", "<h2>Couldn't find user '" + userId + "'</h2>")
+                    }
+                    content.insertAdjacentHTML("beforeEnd", "<h2>Something went wrong ...</h2>");
+                });
+                function showLoadScreen() {
+                    loadScreen.style.opacity = "1";
+                    setTimeout(function() {
+                        loadScreen.insertAdjacentHTML("beforeEnd", "<h3>This could take some time ...</h3>");
+                    }, 2500);
+                    setTimeout(function() {
+                        loadScreen.insertAdjacentHTML("beforeEnd", "<h3>This user has a lot of repos!</h3>");
+                    }, 7500);
+                }
+                function cancelOrHideLoadScreen() {
+                    clearTimeout(loadScreenTimeout)
+                    loadScreen.style.display = "none";
+                }
+            })()
+        </script>
+    </body>
+</html>
