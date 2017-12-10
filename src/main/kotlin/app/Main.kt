@@ -7,24 +7,33 @@ fun main(args: Array<String>) {
 
     val app = Javalin.create().apply {
         port(7070)
-        enableStaticFiles("/public")
         enableDynamicGzip()
     }.start()
 
-    app.get("/user/:user-id") { ctx ->
-        ctx.renderVelocity("user.vm", model("user-id", ctx.param("user-id")!!))
+    app.get("/api/user/:user") { ctx ->
+        ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
     }
 
-    app.get("/api/user/:user-id") { ctx ->
-        ctx.json(UserController.getUserProfile(ctx.param("user-id")!!))
-    }
-
-    app.exception(Exception::class.java) { e, ctx ->
-        when {
-            e.message == "Not Found (404)" -> ctx.status(404)
-            else -> ctx.status(500)
+    app.get("/user/:user") { ctx ->
+        val user = ctx.param("user")!!
+        if (UserCtrl.userExists(user)) {
+            ctx.renderVelocity("user.vm", model("user", user))
+        } else {
+            ctx.redirect("/search?q=$user&notfound")
         }
     }
+
+    app.get("*") { ctx ->
+        val user = ctx.queryParam("q")
+        val notFound = ctx.queryParam("notfound") != null
+        if (user != null && !notFound) {
+            ctx.redirect("/user/$user")
+        } else {
+            ctx.renderVelocity("search.vm", model("q", ctx.queryParam("q") ?: ""));
+        }
+    }
+
+    app.exception(Exception::class.java) { e, ctx -> ctx.status(500) }
 
 }
 

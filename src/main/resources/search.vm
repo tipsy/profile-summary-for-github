@@ -1,0 +1,12 @@
+#parse("/layout.vm")
+#@layout("GitHub profile summary")
+    <div class="search-screen">
+        <h1>Enter GitHub username</h1>
+        <form>
+            <input type="text" name="q" placeholder="ex. 'tipsy'">
+        </form>
+        #if($q != "")
+            <h4>Couldn't find user '$q'</h4>
+        #end
+    </div>
+#end

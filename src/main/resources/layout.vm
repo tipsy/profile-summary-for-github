@@ -1,0 +1,24 @@
+#macro(layout $title)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>$title</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/load-awesome@1.1.0/css/square-jelly-box.min.css">
+        <script>#include("/static/charts.js")</script>
+        <style>#include("/static/style.css")</style>
+    </head>
+    <body data-user-id="$user">
+        <div class="content">
+            $bodyContent
+        </div>
+    </body>
+</html>
+#end
