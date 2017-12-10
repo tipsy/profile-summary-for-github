@@ -11,6 +11,7 @@ fun main(args: Array<String>) {
 
     val app = Javalin.create().apply {
         port(Heroku.getPort() ?: 7070)
+        enableStandardRequestLogging()
         enableDynamicGzip()
     }.start()
 
