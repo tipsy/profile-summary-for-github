@@ -1,0 +1,73 @@
+.load-screen {
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.la-square-jelly-box {
+    color: #38abe2;
+}
+
+.user-info {
+    display: flex;
+    padding-bottom: 40px;
+}
+
+.user-info__img {
+    align-self: center;
+    border-radius: 3px;
+    width: 175px;
+    margin-right: 20px;
+}
+
+.user-info__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+i.fa {
+    color: rgba(0, 0, 0, 0.67);
+    margin-right: 5px;
+}
+
+.commits-per-quarter {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.charts,
+.chart-row {
+    overflow: auto;
+}
+
+.chart-row {
+    padding-bottom: 40px;
+}
+
+.chart-row {
+    border-top: 1px solid rgba(0, 0, 0, 0.1)
+}
+
+.chart-container {
+    position: relative;
+    float: left;
+}
+
+.chart-container--third {
+    width: 33%;
+}
+
+@media (max-width: 900px) {
+    .chart-container--third {
+        width: 100%;
+    }
+
+    .commits-per-quarter {
+        display: none;
+    }
+}

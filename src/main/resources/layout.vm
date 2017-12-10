@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/load-awesome@1.1.0/css/square-jelly-box.min.css">
         <script>#include("/static/charts.js")</script>
         <style>#include("/static/style.css")</style>
+        <style>#include("/static/summary.css")</style>
     </head>
     <body data-user-id="$user">
         <main class="content">
