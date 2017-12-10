@@ -4,10 +4,10 @@ import app.util.Heroku
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
 import org.eclipse.egit.github.core.client.GitHubClient
-import org.eclipse.egit.github.core.client.RequestException
 import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.RepositoryService
 import org.eclipse.egit.github.core.service.UserService
+import kotlin.streams.toList
 
 object UserCtrl {
 
@@ -26,7 +26,7 @@ object UserCtrl {
         if (Cache.invalid(username)) {
             val user = userService.getUser(username)
             val repos = repoService.getRepositories(username).filter { !it.isFork && it.size != 0 }
-            val repoCommits = repos.associate { it to commitService.getCommits(it).filter { it.author?.login == username } }
+            val repoCommits = repos.parallelStream().map { it to commitService.getCommits(it).filter { it.author?.login == username } }.toList().toMap()
             Cache.putUserInfo(UserInfo(username, user, repos, repoCommits))
         }
 
