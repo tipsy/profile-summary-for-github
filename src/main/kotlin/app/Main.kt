@@ -5,11 +5,9 @@ import io.javalin.Javalin
 import io.javalin.translator.template.TemplateUtil.model
 import org.slf4j.LoggerFactory
 
-class Main {} // dummy class for logging
-
 fun main(args: Array<String>) {
 
-    val log = LoggerFactory.getLogger(Main::class.java)
+    val log = LoggerFactory.getLogger("app.MainKt")
 
     val app = Javalin.create().apply {
         port(Heroku.getPort() ?: 7070)
