@@ -42,7 +42,7 @@ object UserCtrl {
     }
 
     fun userExists(username: String?) = try {
-        userService.getUser(username) != null
+        Cache.getUserProfile(username ?: "") != null || userService.getUser(username) != null
     } catch (e: Exception) {
         false
     }
