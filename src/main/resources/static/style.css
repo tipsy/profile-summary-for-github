@@ -33,6 +33,11 @@ body {
     align-items: center;
 }
 
+i.fa {
+    color: rgba(0, 0, 0, 0.67);
+    margin-right: 5px;
+}
+
 input {
     height: 40px;
     font-size: 18px;
