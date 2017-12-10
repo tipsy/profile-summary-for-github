@@ -23,19 +23,20 @@ fun main(args: Array<String>) {
         if (UserCtrl.userExists(user)) {
             ctx.renderVelocity("user.vm", model("user", user))
         } else {
-            ctx.redirect("/search?q=$user&notfound")
+            ctx.redirect("/search?q=$user")
         }
     }
 
-    app.get("*") { ctx ->
+    app.get("/search") { ctx ->
         val user = ctx.queryParam("q")
-        val notFound = ctx.queryParam("notfound") != null
-        if (user != null && !notFound) {
+        if (UserCtrl.userExists(user)) {
             ctx.redirect("/user/$user")
         } else {
             ctx.renderVelocity("search.vm", model("q", ctx.queryParam("q") ?: ""));
         }
     }
+
+    app.error(404) { ctx -> ctx.redirect("/search") }
 
     app.exception(Exception::class.java) { e, ctx ->
         log.warn("Uncaught exception", e)

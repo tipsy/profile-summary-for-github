@@ -41,7 +41,7 @@ object UserCtrl {
         return Cache.getUserInfo(username)!!
     }
 
-    fun userExists(username: String) = try {
+    fun userExists(username: String?) = try {
         userService.getUser(username) != null
     } catch (e: Exception) {
         false
