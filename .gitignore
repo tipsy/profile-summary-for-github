@@ -10,3 +10,4 @@ buildNumber.properties
 
 .idea
 *.iml
+cache
