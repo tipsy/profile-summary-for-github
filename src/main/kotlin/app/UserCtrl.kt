@@ -1,5 +1,6 @@
 package app
 
+import app.util.Heroku
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
 import org.eclipse.egit.github.core.client.GitHubClient
@@ -8,13 +9,12 @@ import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.RepositoryService
 import org.eclipse.egit.github.core.service.UserService
 
-
 object UserCtrl {
 
     // https://javadoc.io/doc/org.eclipse.mylyn.github/org.eclipse.egit.github.core/2.1.5
 
     private val client = GitHubClient().apply {
-        setOAuth2Token(System.getenv("OAUTH_TOKEN"))
+        setOAuth2Token(Heroku.getOauthToken() ?: System.getenv("OAUTH_TOKEN"))
     }
 
     private val repoService = RepositoryService(client)

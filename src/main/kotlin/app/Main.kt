@@ -1,13 +1,13 @@
 package app
 
-import app.util.getHerokuAssignedPort
+import app.util.Heroku
 import io.javalin.Javalin
 import io.javalin.translator.template.TemplateUtil.model
 
 fun main(args: Array<String>) {
 
     val app = Javalin.create().apply {
-        port(getHerokuAssignedPort() ?: 7070)
+        port(Heroku.getPort() ?: 7070)
         enableDynamicGzip()
     }.start()
 
