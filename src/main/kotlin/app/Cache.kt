@@ -1,26 +1,15 @@
 package app
 
-import org.eclipse.egit.github.core.Repository
-import org.eclipse.egit.github.core.RepositoryCommit
-import org.eclipse.egit.github.core.User
 import java.io.*
 import java.util.*
-
-data class UserInfo(
-        val username: String,
-        val user: User,
-        val repos: List<Repository>,
-        val repoCommits: Map<Repository, List<RepositoryCommit>>) : Serializable {
-    val timeStamp = Date().time
-}
 
 object Cache {
 
     private const val path = "cache/userinfo";
 
-    fun putUserInfo(userInfo: UserInfo) {
+    fun putUserProfile(userProfile: UserProfile) {
         val userInfoMap = getAllUserInfo()
-        userInfoMap[userInfo.username] = userInfo
+        userInfoMap[userProfile.user.login] = userProfile
         val byteArrayOutputStream = ByteArrayOutputStream()
         ObjectOutputStream(byteArrayOutputStream).writeObject(userInfoMap)
         File(path).apply {
@@ -35,10 +24,10 @@ object Cache {
     fun getUserInfo(username: String) = getAllUserInfo()[username]
 
     @Suppress("UNCHECKED_CAST")
-    fun getAllUserInfo(): MutableMap<String, UserInfo> = if (File(path).exists()) {
+    fun getAllUserInfo(): MutableMap<String, UserProfile> = if (File(path).exists()) {
         ObjectInputStream(
                 ByteArrayInputStream(File("cache/userinfo").readBytes())
-        ).readObject() as MutableMap<String, UserInfo>
+        ).readObject() as MutableMap<String, UserProfile>
     } else {
         mutableMapOf()
     }
