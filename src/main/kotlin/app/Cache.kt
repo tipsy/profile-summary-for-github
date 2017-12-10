@@ -6,12 +6,12 @@ import java.util.*
 object Cache {
 
     private const val path = "cache/userinfo";
+    private val userProfiles = readUserProfilesFromDisk()
 
     fun putUserProfile(userProfile: UserProfile) {
-        val userProfileMap = getAllUserProfiles()
-        userProfileMap[userProfile.user.login] = userProfile
+        userProfiles[userProfile.user.login] = userProfile
         val byteArrayOutputStream = ByteArrayOutputStream()
-        ObjectOutputStream(byteArrayOutputStream).writeObject(userProfileMap)
+        ObjectOutputStream(byteArrayOutputStream).writeObject(userProfiles)
         File(path).apply {
             if (!exists()) {
                 parentFile.mkdirs()
@@ -21,10 +21,10 @@ object Cache {
         }
     }
 
-    fun getUserProfile(username: String) = getAllUserProfiles()[username]
+    fun getUserProfile(username: String) = userProfiles[username]
 
     @Suppress("UNCHECKED_CAST")
-    fun getAllUserProfiles(): MutableMap<String, UserProfile> = if (File(path).exists()) {
+    private fun readUserProfilesFromDisk(): MutableMap<String, UserProfile> = if (File(path).exists()) {
         ObjectInputStream(
                 ByteArrayInputStream(File("cache/userinfo").readBytes())
         ).readObject() as MutableMap<String, UserProfile>
@@ -32,6 +32,6 @@ object Cache {
         mutableMapOf()
     }
 
-    fun invalid(username: String) = Date().time - (getUserProfile(username)?.timeStamp ?: 0) > (60 * 60 * 24 * 1000) // 1 day in MD
+    fun invalid(username: String) = Date().time - (userProfiles[username]?.timeStamp ?: 0) > (60 * 60 * 24 * 1000) // 1 day in ms
 
 }
