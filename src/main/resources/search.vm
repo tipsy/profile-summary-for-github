@@ -12,7 +12,7 @@
             please <a href="https://github.com/tipsy/github-profile-summary">star the repo</a> and try again.
             <br>
             <br>
-            This is necessary because GitHub has 5000req/hour rate-limit which would be
+            This is necessary because GitHub has a 5000req/hour rate-limit which would be
             <br>
             reached very quickly if you tried to analyze some of the bigger profiles on GitHub.
         </p>
