@@ -15,6 +15,7 @@
         <script>#include("/static/charts.js")</script>
         <style>#include("/static/style.css")</style>
         <style>#include("/static/summary.css")</style>
+        <link rel="shortcut icon" href="#include("/static/favicon.base64")">
     </head>
     <body data-user-id="$user">
         <main class="content">
