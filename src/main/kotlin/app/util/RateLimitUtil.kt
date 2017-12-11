@@ -24,7 +24,7 @@ object RateLimitUtil {
         }
 
         Timer().scheduleAtFixedRate(decrementAllCounters(), 0, 5000)
-        
+
     }
 
     private fun decrementAllCounters() = object : TimerTask() {

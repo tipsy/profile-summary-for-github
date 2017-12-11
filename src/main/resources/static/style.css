@@ -76,7 +76,7 @@ input {
     bottom: 60px;
     background: #fff;
     padding: 10px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
     font-size: 16px;
 }
 
@@ -95,7 +95,6 @@ input {
 .rate-limited .count {
     display: none;
 }
-
 
 #rate-limit-count {
     font-weight: 700;
