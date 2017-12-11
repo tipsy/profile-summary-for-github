@@ -1,6 +1,7 @@
 package app
 
 import app.util.Heroku
+import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.embeddedserver.jetty.websocket.WsSession
 import io.javalin.translator.template.TemplateUtil.model
@@ -51,6 +52,8 @@ fun main(args: Array<String>) {
     app.ws("/rate-limit-status") { ws ->
         ws.onConnect { session -> Timer().scheduleAtFixedRate(reportRemainingRequests(session), 0, 1000) }
     }
+
+    RateLimitUtil.enableTerribleRateLimiting(app)
 
     app.start()
 
