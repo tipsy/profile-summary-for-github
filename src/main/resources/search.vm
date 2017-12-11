@@ -16,8 +16,8 @@
             reached very quickly if you tried to analyze some of the bigger profiles on GitHub.
             <br>
             <br>
-            If the app has been rate-limited (check lower right corner), please come back later,<br>
-            or build the app locally and user your own token
+            If the app has been rate-limited (check lower right corner), please come back later<br>
+            or build the app locally and use your own token
         </p>
     #end
 </div>
