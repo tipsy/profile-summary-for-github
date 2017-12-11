@@ -18,24 +18,26 @@ fun main(args: Array<String>) {
     }
 
     app.get("/api/user/:user") { ctx ->
-        ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
+        val user = ctx.param("user")!!
+        when (UserCtrl.hasStarredRepo(user)) {
+            true -> ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
+            false -> ctx.status(400)
+        }
     }
 
     app.get("/user/:user") { ctx ->
         val user = ctx.param("user")!!
-        if (UserCtrl.userExists(user)) {
-            ctx.renderVelocity("user.vm", model("user", user))
-        } else {
-            ctx.redirect("/search?q=$user")
+        when (UserCtrl.hasStarredRepo(user)) {
+            true -> ctx.renderVelocity("user.vm", model("user", user))
+            false -> ctx.redirect("/search?q=$user")
         }
     }
 
     app.get("/search") { ctx ->
         val user = ctx.queryParam("q")
-        if (UserCtrl.userExists(user)) {
-            ctx.redirect("/user/$user")
-        } else {
-            ctx.renderVelocity("search.vm", model("q", ctx.queryParam("q") ?: ""));
+        when (UserCtrl.hasStarredRepo(user)) {
+            true -> ctx.redirect("/user/$user")
+            false -> ctx.renderVelocity("search.vm", model("q", user ?: ""))
         }
     }
 

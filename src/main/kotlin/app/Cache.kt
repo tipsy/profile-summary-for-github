@@ -32,6 +32,7 @@ object Cache {
         mutableMapOf()
     }
 
+    fun contains(username: String?) = userProfiles[username] != null
     fun invalid(username: String) = Date().time - (userProfiles[username]?.timeStamp ?: 0) > (60 * 60 * 24 * 1000) // 1 day in ms
 
 }
