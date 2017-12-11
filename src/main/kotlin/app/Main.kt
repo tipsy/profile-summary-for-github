@@ -54,7 +54,7 @@ fun main(args: Array<String>) {
 
 }
 
-private fun reportRemainingRequests(session: WsSession): TimerTask = object : TimerTask() {
+private fun reportRemainingRequests(session: WsSession) = object : TimerTask() {
     override fun run() {
         if (session.isOpen) {
             return session.send(UserCtrl.client.remainingRequests.toString())
