@@ -27,13 +27,19 @@
             Source is on <a href="https://github.com/tipsy/github-profile-summary" target="_blank">GitHub</a>.
         </footer>
         <span class="rate-limit">
-            <span id="rate-limit-count"></span> requests left <br> before rate-limit
+            <span class="msg">The app is currently rate-limited<br>Please check back later</span>
+            <span class="count"><span id="rate-limit-count"></span> requests left <br> before rate-limit</span>
         </span>
         <script>
             (function () {
                 var ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/rate-limit-status")
                 ws.onmessage = function (msg) {
-                    document.getElementById("rate-limit-count").innerText = msg.data;
+                    if (msg.data === "0") {
+                        document.querySelector(".rate-limit").classList.add("rate-limited");
+                    } else {
+                        document.querySelector(".rate-limit").classList.remove("rate-limited");
+                    }
+                    document.getElementById("rate-limit-count").innerHTML = msg.data;
                 }
             })();
         </script>

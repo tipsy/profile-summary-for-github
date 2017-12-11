@@ -80,6 +80,23 @@ input {
     font-size: 16px;
 }
 
+.rate-limited {
+    color: #e60000;
+}
+
+.rate-limit .msg {
+    display: none;
+}
+
+.rate-limited .msg {
+    display: block;
+}
+
+.rate-limited .count {
+    display: none;
+}
+
+
 #rate-limit-count {
     font-weight: 700;
 }

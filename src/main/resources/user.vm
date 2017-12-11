@@ -70,7 +70,10 @@
             });
         }).catch(function () {
             cancelOrHideLoadScreen();
-            document.querySelector(".content").insertAdjacentHTML("beforeEnd", "<h2>Something went wrong ...</h2>");
+            document.querySelector(".content").insertAdjacentHTML("beforeEnd",
+                    "<h2>Something went wrong ...</h2>" +
+                    "<p>This usually means the app has been rate-limited. Check the lower right corner.</p>"
+            );
         });
 
         function showLoadScreen() {

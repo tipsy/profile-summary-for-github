@@ -24,7 +24,11 @@ object UserCtrl {
     private val commitService = CommitService(client)
     private val userService = UserService(client)
     private val watcherService = WatcherService(client)
-    private val githubProfileSummary = repoService.getRepository("tipsy", "github-profile-summary")
+    private val githubProfileSummary = try {
+        repoService.getRepository("tipsy", "github-profile-summary")
+    } catch (e: Exception) {
+        null
+    }
 
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
@@ -45,11 +49,16 @@ object UserCtrl {
     }
 
     fun hasStarredRepo(username: String?): Boolean {
-        if (Cache.contains(username)) {
-            return true;
+        try {
+            if (Cache.contains(username)) {
+                return true;
+            }
+            val watchers = watcherService.getWatchers(githubProfileSummary).map { it.login }
+            return watchers.contains(username)
+        } catch (e: Exception) {
+            return false
         }
-        val watchers = watcherService.getWatchers(githubProfileSummary).map { it.login }
-        return watchers.contains(username)
+
     }
 
     private fun getYearAndQuarter(it: RepositoryCommit): String {
