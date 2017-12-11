@@ -2,8 +2,10 @@ package app
 
 import app.util.Heroku
 import io.javalin.Javalin
+import io.javalin.embeddedserver.jetty.websocket.WsSession
 import io.javalin.translator.template.TemplateUtil.model
 import org.slf4j.LoggerFactory
+import java.util.*
 
 fun main(args: Array<String>) {
 
@@ -13,7 +15,7 @@ fun main(args: Array<String>) {
         port(Heroku.getPort() ?: 7070)
         enableStandardRequestLogging()
         enableDynamicGzip()
-    }.start()
+    }
 
     app.get("/api/user/:user") { ctx ->
         ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
@@ -44,6 +46,21 @@ fun main(args: Array<String>) {
         ctx.status(500)
     }
 
+    app.ws("/rate-limit-status") { ws ->
+        ws.onConnect { session -> Timer().scheduleAtFixedRate(reportRemainingRequests(session), 0, 1000) }
+    }
+
+    app.start()
+
+}
+
+private fun reportRemainingRequests(session: WsSession): TimerTask = object : TimerTask() {
+    override fun run() {
+        if (session.isOpen) {
+            return session.send(UserCtrl.client.remainingRequests.toString())
+        }
+        this.cancel()
+    }
 }
 
 

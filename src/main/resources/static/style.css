@@ -21,6 +21,7 @@ html {
     font-size: 18px;
     background: #eee9df;
     padding: 60px 30px;
+    overflow-y: scroll;
 }
 
 body {
@@ -67,4 +68,18 @@ input {
 .content {
     max-width: 1200px;
     margin: 0 auto;
+}
+
+.rate-limit {
+    position: fixed;
+    right: 20px;
+    bottom: 60px;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    font-size: 16px;
+}
+
+#rate-limit-count {
+    font-weight: 700;
 }

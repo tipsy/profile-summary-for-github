@@ -25,6 +25,17 @@
             <a href="http://www.chartjs.org/docs/latest/" target="_blank">chart.js</a> <small>(visualization)</small>.
             Source is on <a href="https://github.com/tipsy/github-profile-summary" target="_blank">GitHub</a>.
         </footer>
+        <span class="rate-limit">
+            <span id="rate-limit-count"></span> requests left <br> before rate-limit
+        </span>
+        <script>
+            (function () {
+                var ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/rate-limit-status")
+                ws.onmessage = function (msg) {
+                    document.getElementById("rate-limit-count").innerText = msg.data;
+                }
+            })();
+        </script>
     </body>
 </html>
 #end

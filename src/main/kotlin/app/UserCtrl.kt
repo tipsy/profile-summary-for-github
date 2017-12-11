@@ -15,13 +15,14 @@ object UserCtrl {
 
     // https://javadoc.io/doc/org.eclipse.mylyn.github/org.eclipse.egit.github.core/2.1.5
 
-    private val client = GitHubClient().apply {
+    val client = GitHubClient().apply {
         setOAuth2Token(Heroku.getOauthToken() ?: System.getenv("OAUTH_TOKEN"))
     }
 
     private val repoService = RepositoryService(client)
     private val commitService = CommitService(client)
     private val userService = UserService(client)
+    private val tipsy = userService.getUser("tipsy")
 
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
