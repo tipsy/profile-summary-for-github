@@ -44,12 +44,6 @@ object UserCtrl {
         return Cache.getUserProfile(username)!!
     }
 
-    fun userExists(username: String?) = try {
-        Cache.getUserProfile(username!!) != null || userService.getUser(username) != null
-    } catch (e: Exception) {
-        false
-    }
-
     fun hasStarredRepo(username: String?): Boolean {
         if (Cache.contains(username)) {
             return true;
