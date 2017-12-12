@@ -54,6 +54,7 @@ fun main(args: Array<String>) {
     }
 
     RateLimitUtil.enableTerribleRateLimiting(app)
+    Heroku.enableSslRedirect(app)
 
     app.start()
 
