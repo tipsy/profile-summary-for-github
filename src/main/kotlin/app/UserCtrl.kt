@@ -44,7 +44,15 @@ object UserCtrl {
             val repoCommitCount = repoCommits.map { it.key.name to it.value.size }.toList().sortedBy { (_, v) -> -v }.take(10).toMap().toSortedMap()
             val repoStarCount = repos.filter { it.watchers > 0 }.map { it.name to it.watchers }.sortedBy { (_, v) -> -v }.take(10).toMap().toSortedMap()
 
-            Cache.putUserProfile(UserProfile(user, quarterCommitCount, langRepoCount, langStarCount, langCommitCount, repoCommitCount, repoStarCount))
+            Cache.putUserProfile(UserProfile(
+                    user,
+                    quarterCommitCount,
+                    langRepoCount,
+                    langStarCount,
+                    langCommitCount,
+                    repoCommitCount,
+                    repoStarCount
+            ))
         }
         return Cache.getUserProfile(username)!!
     }
