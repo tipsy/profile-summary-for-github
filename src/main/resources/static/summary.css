@@ -38,6 +38,14 @@ i.fa {
 .commits-per-quarter {
     flex-grow: 1;
     flex-shrink: 1;
+    position: relative;
+}
+.commits-per-quarter::after {
+    content: "Commits per quarter";
+    position: absolute;
+    right: 35px;
+    bottom: -15px;
+    font-size: 13px;
 }
 
 .charts,
