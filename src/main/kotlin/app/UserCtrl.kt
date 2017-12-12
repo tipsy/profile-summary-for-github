@@ -41,9 +41,10 @@ object UserCtrl {
             val langRepoCount = langRepoGrouping.eachCount()
             val langStarCount = langRepoGrouping.fold(0) { acc, repo -> acc + repo.watchers }
             val langCommitCount = langRepoGrouping.fold(0) { acc, repo -> acc + repoCommits[repo]!!.size }
-            val repoCommitCount = repoCommits.map { it.key.name to it.value.size }.toList().sortedBy { (_, v) -> -v }.take(50).toMap()
+            val repoCommitCount = repoCommits.map { it.key.name to it.value.size }.toList().sortedBy { (_, v) -> -v }.take(10).toMap()
+            val repoStarCount = repos.map { it.name to it.watchers }.sortedBy { (_, v) -> -v }.take(10).toMap()
 
-            Cache.putUserProfile(UserProfile(user, quarterCommitCount, langRepoCount, langStarCount, langCommitCount, repoCommitCount))
+            Cache.putUserProfile(UserProfile(user, quarterCommitCount, langRepoCount, langStarCount, langCommitCount, repoCommitCount, repoStarCount))
         }
         return Cache.getUserProfile(username)!!
     }
@@ -77,7 +78,8 @@ data class UserProfile(
         val langRepoCount: Map<String, Int>,
         val langStarCount: Map<String, Int>,
         val langCommitCount: Map<String, Int>,
-        val repoCommitCount: Map<String, Int>
+        val repoCommitCount: Map<String, Int>,
+        val repoStarCount: Map<String, Int>
 ) : Serializable {
     val timeStamp = Date().time
 }

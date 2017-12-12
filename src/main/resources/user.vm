@@ -34,10 +34,18 @@
             </div>
         </div>
         <div class="chart-row">
-            <h2>Commits per Repo
-                <small v-if="user.publicRepos > 50">(top 50)</small>
-            </h2>
-            <canvas id="repoCommitCount"></canvas>
+            <div class="chart-container chart-container--half">
+                <h2>Commits per Repo
+                    <small v-if="Object.keys(data.repoCommitCount).length === 10">(top 10)</small>
+                </h2>
+                <canvas id="repoCommitCount"></canvas>
+            </div>
+            <div class="chart-container chart-container--half">
+                <h2>Stars per Repo
+                    <small v-if="Object.keys(data.repoStarCount).length == 10">(top 10)</small>
+                </h2>
+                <canvas id="repoStarCount"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -58,6 +66,7 @@
             new Vue({
                 el: "#vue",
                 data: {
+                    data: response.data,
                     user: response.data.user
                 },
                 mounted: function () {
@@ -66,6 +75,7 @@
                     donutChart("langStarCount", response.data);
                     donutChart("langCommitCount", response.data);
                     donutChart("repoCommitCount", response.data);
+                    donutChart("repoStarCount", response.data);
                 }
             });
         }).catch(function () {

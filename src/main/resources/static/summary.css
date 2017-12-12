@@ -62,8 +62,14 @@ i.fa {
     width: 33%;
 }
 
+.chart-container--half {
+    width: 50%;
+    height: 500px;
+}
+
 @media (max-width: 900px) {
-    .chart-container--third {
+    .chart-container--third,
+    .chart-container--half {
         width: 100%;
     }
 
