@@ -43,6 +43,9 @@ function lineChart(objectName, data) {
             },
             legend: {
                 display: false
+            },
+            tooltips: {
+                intersect: false
             }
         }
     });
