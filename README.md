@@ -1,5 +1,7 @@
 # github-profile-summary
 
+## live at [https://github-profile-summary.com/](https://github-profile-summary.com/)
+
 ## run locally
 * `git clone https://github.com/tipsy/github-profile-summary.git`
 * `cd github-profile-summary`
