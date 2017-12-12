@@ -32,7 +32,8 @@
         </span>
         <script>
             (function () {
-                var ws = new WebSocket("ws://" + location.hostname + ":" + location.port + "/rate-limit-status")
+                var wsProtocol = window.location.protocol.indexOf("https") > -1 ? "wws" : "ws";
+                var ws = new WebSocket(wsProtocol + "://" + location.hostname + ":" + location.port + "/rate-limit-status")
                 ws.onmessage = function (msg) {
                     if (msg.data === "0") {
                         document.querySelector(".rate-limit").classList.add("rate-limited");
