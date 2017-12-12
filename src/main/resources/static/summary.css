@@ -64,7 +64,6 @@ i.fa {
 
 .chart-container--half {
     width: 50%;
-    height: 500px;
 }
 
 @media (max-width: 900px) {
