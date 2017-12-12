@@ -6,7 +6,7 @@
 
     <groupId>io.javalin</groupId>
     <artifactId>github-profile-summary</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <kotlin.version>1.2.0</kotlin.version>
@@ -69,6 +69,11 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>test-compile</id>
@@ -135,7 +140,7 @@
                     <appName>github-profile-summary</appName>
                     <processTypes>
                         <!-- Tell Heroku how to launch your application -->
-                        <web>java -jar ./target/github-profile-summary-1.0-SNAPSHOT-jar-with-dependencies.jar</web>
+                        <web>java -jar ./target/github-profile-summary-1.0-jar-with-dependencies.jar</web>
                     </processTypes>
                 </configuration>
             </plugin>
