@@ -23,7 +23,7 @@ function lineChart(objectName, data) {
         data: {
             labels: Object.keys(data[objectName]),
             datasets: [{
-                label: 'Commits per quarter',
+                label: 'Commits',
                 data: Object.values(data[objectName]),
                 backgroundColor: "rgba(67, 142, 233, 0.2)",
                 borderColor: "rgba(67, 142, 233, 1)",
