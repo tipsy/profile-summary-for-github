@@ -18,6 +18,7 @@
         <link rel="shortcut icon" href="#include("/static/favicon.base64")">
     </head>
     <body data-user-id="$user">
+        #include("/static/gtm.html")
         <main class="content">
             $bodyContent
         </main>
