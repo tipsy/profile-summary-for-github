@@ -42,7 +42,7 @@ object UserCtrl {
             val langStarCount = langRepoGrouping.fold(0) { acc, repo -> acc + repo.watchers }
             val langCommitCount = langRepoGrouping.fold(0) { acc, repo -> acc + repoCommits[repo]!!.size }
             val repoCommitCount = repoCommits.map { it.key.name to it.value.size }.toList().sortedBy { (_, v) -> -v }.take(10).shuffled().toMap()
-            val repoStarCount = repos.map { it.name to it.watchers }.sortedBy { (_, v) -> -v }.take(10).shuffled().toMap()
+            val repoStarCount = repos.filter { it.watchers > 0 }.map { it.name to it.watchers }.sortedBy { (_, v) -> -v }.take(10).shuffled().toMap()
 
             Cache.putUserProfile(UserProfile(user, quarterCommitCount, langRepoCount, langStarCount, langCommitCount, repoCommitCount, repoStarCount))
         }
