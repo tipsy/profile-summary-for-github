@@ -2,17 +2,10 @@ package app.util
 
 object Heroku {
 
-    fun getPort(): Int? {
-        val processBuilder = ProcessBuilder()
-        if (processBuilder.environment().get("PORT") != null) {
-            return Integer.parseInt(processBuilder.environment().get("PORT"))
-        }
-        return null
+    fun getPort() = ProcessBuilder().environment()["PORT"]?.let {
+        Integer.parseInt(it)
     }
 
-    fun getOauthToken(): String? {
-        val processBuilder = ProcessBuilder()
-        return processBuilder.environment().get("OAUTH_TOKEN")
-    }
+    fun getOauthToken() = ProcessBuilder().environment()["OAUTH_TOKEN"]
 
 }
