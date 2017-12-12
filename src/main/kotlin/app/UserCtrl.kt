@@ -24,11 +24,7 @@ object UserCtrl {
     private val commitService = CommitService(client)
     private val userService = UserService(client)
     private val watcherService = WatcherService(client)
-    private val githubProfileSummary = try {
-        repoService.getRepository("tipsy", "github-profile-summary")
-    } catch (e: Exception) {
-        null
-    }
+    private val githubProfileSummary = repoService.getRepository("tipsy", "github-profile-summary")
 
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
