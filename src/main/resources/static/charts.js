@@ -23,6 +23,9 @@ function donutChart(objectName, data) {
                     if (canvas === "repoStarCount" || canvas === "repoCommitCount") {
                         window.open("https://github.com/" + userId + "/" + label, "_blank");
                         window.focus();
+                    } else {
+                        window.open("https://github.com/" + userId + "?utf8=%E2%9C%93&tab=repositories&q=&type=source&language=" + encodeURIComponent(label), "_blank");
+                        window.focus();
                     }
                 } catch (ignored) {
                 }
