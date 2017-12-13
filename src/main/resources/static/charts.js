@@ -14,7 +14,10 @@ function donutChart(objectName, data) {
         options: {
             animation: false,
             legend: {
-                position: "left"
+                position: "left",
+                labels: {
+                    boxWidth: 12
+                }
             },
             onClick: function (e, data) {
                 try {
