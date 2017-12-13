@@ -40,6 +40,7 @@ i.fa {
     flex-shrink: 1;
     position: relative;
 }
+
 .commits-per-quarter::after {
     content: "Commits per quarter";
     position: absolute;
