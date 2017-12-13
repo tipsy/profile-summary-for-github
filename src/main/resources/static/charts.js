@@ -1,10 +1,13 @@
 function donutChart(objectName, data) {
+    var userId = document.body.getAttribute("data-user-id");
+    var labels = Object.keys(data[objectName]);
+    var values = Object.values(data[objectName]);
     new Chart(document.getElementById(objectName).getContext("2d"), {
         type: "doughnut",
         data: {
-            labels: Object.keys(data[objectName]),
+            labels: labels,
             datasets: [{
-                data: Object.values(data[objectName]),
+                data: values,
                 backgroundColor: repeatColors(Object.keys(data[objectName]).length)
             }]
         },
@@ -12,6 +15,17 @@ function donutChart(objectName, data) {
             animation: false,
             legend: {
                 position: "left"
+            },
+            onClick: function (e, data) {
+                try {
+                    var label = labels[data[0]._index];
+                    var canvas = data[0]._chart.canvas.id;
+                    if (canvas === "repoStarCount" || canvas === "repoCommitCount") {
+                        window.open("https://github.com/" + userId + "/" + label, "_blank");
+                        window.focus();
+                    }
+                } catch (ignored) {
+                }
             }
         }
     });
