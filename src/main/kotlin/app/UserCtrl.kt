@@ -1,6 +1,7 @@
 package app
 
 import app.util.Heroku
+import org.eclipse.egit.github.core.Repository
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
 import org.eclipse.egit.github.core.client.GitHubClient
@@ -30,7 +31,7 @@ object UserCtrl {
         if (Cache.invalid(username)) {
             val user = userService.getUser(username)
             val repos = repoService.getRepositories(username).filter { !it.isFork && it.size != 0 }
-            val repoCommits = repos.parallelStream().map { it to commitService.getCommits(it).filter { it.author?.login == username } }.toList().toMap()
+            val repoCommits = repos.parallelStream().map { it to commitsForRepo(it).filter { it.author?.login == username } }.toList().toMap()
             val langRepoGrouping = repos.groupingBy { (it.language ?: "Unknown") }
 
             val quarterCommitCount = repoCommits.flatMap { it.value }.groupingBy { getYearAndQuarter(it) }.fold(0) { acc, _ -> acc + 1 }.toSortedMap()
@@ -66,6 +67,12 @@ object UserCtrl {
         } catch (e: Exception) {
             return false
         }
+    }
+
+    private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {
+        commitService.getCommits(repo)
+    } catch (e: Exception) {
+        listOf()
     }
 
     private fun getYearAndQuarter(it: RepositoryCommit): String {
