@@ -2,13 +2,17 @@ package app.util
 
 import io.javalin.Javalin
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 
+// This is a very naive IP-based rate-limiting mechanism
+// There is a 1 request per 5 seconds limit, but with a 25 request buffer
+// A HashMap holds all the IPs and counters, which are incremented on every request and decremented every 5 seconds
 object RateLimitUtil {
 
     class TerribleRateLimitException : Exception()
 
-    private val ipReqCount = mutableMapOf<String, Int>()
+    private val ipReqCount = ConcurrentHashMap<String, Int>()
 
     fun enableTerribleRateLimiting(app: Javalin) {
 
