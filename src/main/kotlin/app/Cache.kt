@@ -8,6 +8,7 @@ object Cache {
     private const val path = "cache/userinfo";
     private val userProfiles = readUserProfilesFromDisk()
 
+    // Put userProfile in cache, then serialize cache and write it to disk
     fun putUserProfile(userProfile: UserProfile) {
         userProfiles[userProfile.user.login] = userProfile
         val byteArrayOutputStream = ByteArrayOutputStream()
@@ -23,6 +24,7 @@ object Cache {
 
     fun getUserProfile(username: String) = userProfiles[username]
 
+    // Read cache from disk, return empty map if no cache file exists
     @Suppress("UNCHECKED_CAST")
     private fun readUserProfilesFromDisk(): MutableMap<String, UserProfile> = if (File(path).exists()) {
         ObjectInputStream(
