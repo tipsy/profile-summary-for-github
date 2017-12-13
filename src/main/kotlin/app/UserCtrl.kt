@@ -66,7 +66,6 @@ object UserCtrl {
         } catch (e: Exception) {
             return false
         }
-
     }
 
     private fun getYearAndQuarter(it: RepositoryCommit): String {
