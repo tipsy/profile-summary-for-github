@@ -1,5 +1,5 @@
 #parse("/layout.vm")
-#@layout("GitHub profile summary")
+#@layout("Github Profile Summary - Visualize your GitHub profile")
 <div class="search-screen">
     <h1>Enter GitHub username</h1>
     <form>

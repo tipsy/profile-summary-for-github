@@ -5,7 +5,12 @@
         <title>$title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Github Profile Summary - Visualize your GitHub profile">
+        <meta name="description" content="Github Profile Summary is a GitHub visualization tool written in Kotlin">
+        <meta property="og:title" content="Github Profile Summary - Visualize your GitHub profile">
+        <meta property="og:site_name" content="Github Profile Summary">
+        <meta property="og:url" content="https://github-profile-summary.com">
+        <meta property="og:description" content="Github Profile Summary is a GitHub visualization tool written in Kotlin">
+        <meta property="og:image" content="https://user-images.githubusercontent.com/1521451/33957306-8e1d8af0-e041-11e7-8e04-3de9e32868ba.PNG">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.17.1/axios.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.9/vue.min.js"></script>
