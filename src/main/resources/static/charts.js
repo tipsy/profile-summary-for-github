@@ -2,17 +2,34 @@ function donutChart(objectName, data) {
     var userId = document.body.getAttribute("data-user-id");
     var labels = Object.keys(data[objectName]);
     var values = Object.values(data[objectName]);
+    var colors = repeatColors(labels.length);
+    window.languageColors = window.languageColors || {};
+    if ("langRepoCount" === objectName) {
+        // when the first language-set is loaded, set a color-profile for all languages
+        labels.forEach((language, i) => languageColors[language] = colors[i]);
+    }
+    if (["langRepoCount", "langStarCount", "langCommitCount"].indexOf(objectName) > -1) {
+        // if the dataset is language-related, load color-profile
+        labels.forEach((language, i) => colors[i] = languageColors[language]);
+    }
+    if (objectName === "repoCommitCount") {
+        arrayRotate(colors, 2); // change starting color
+    }
+    if (objectName === "repoStarCount") {
+        arrayRotate(colors, 4); // change starting color
+    }
     new Chart(document.getElementById(objectName).getContext("2d"), {
         type: "doughnut",
         data: {
             labels: labels,
             datasets: [{
                 data: values,
-                backgroundColor: repeatColors(Object.keys(data[objectName]).length)
+                backgroundColor: colors
             }]
         },
         options: {
             animation: false,
+            rotation: (-0.40 * Math.PI),
             legend: {
                 position: "left",
                 labels: {
@@ -71,18 +88,26 @@ function lineChart(objectName, data) {
     });
 }
 
+var rainbowColors = [
+    "#54ca76",
+    "#f5c452",
+    "#f2637f",
+    "#9261f3",
+    "#31a4e6",
+    "#55cbcb",
+];
+
 function repeatColors(length) {
     var array = [];
     while (array.length < length) {
-        array = array.concat([
-            "#f2637f",
-            "#f5a441",
-            "#f5c452",
-            "#54ca76",
-            "#55cbcb",
-            "#31a4e6",
-            "#9261f3"
-        ]);
+        array = array.concat(rainbowColors);
     }
     return array;
+}
+
+function arrayRotate(arr, n) {
+    for (var i = 0; i < n; i++) {
+        arr.push(arr.shift());
+    }
+    return arr
 }
