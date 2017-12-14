@@ -41,6 +41,9 @@ object UserCtrl {
             val repoCommitCount = repoCommits.map { it.key.name to it.value.size }.toList().sortedBy { (_, v) -> -v }.take(10).toMap()
             val repoStarCount = repos.filter { it.watchers > 0 }.map { it.name to it.watchers }.sortedBy { (_, v) -> -v }.take(10).toMap()
 
+            val repoCommitCountDescriptions = repoCommitCount.map { it.key to repos.find { r -> r.name == it.key }?.description }.toMap()
+            val repoStarCountDescriptions = repoStarCount.map { it.key to repos.find { r -> r.name == it.key }?.description }.toMap()
+
             Cache.putUserProfile(UserProfile(
                     user,
                     quarterCommitCount,
@@ -48,7 +51,9 @@ object UserCtrl {
                     langStarCount,
                     langCommitCount,
                     repoCommitCount,
-                    repoStarCount
+                    repoStarCount,
+                    repoCommitCountDescriptions,
+                    repoStarCountDescriptions
             ))
         }
         return Cache.getUserProfile(username)!!
@@ -89,7 +94,9 @@ data class UserProfile(
         val langStarCount: Map<String, Int>,
         val langCommitCount: Map<String, Int>,
         val repoCommitCount: Map<String, Int>,
-        val repoStarCount: Map<String, Int>
+        val repoStarCount: Map<String, Int>,
+        val repoCommitCountDescriptions: Map<String, String?>,
+        val repoStarCountDescriptions: Map<String, String?>
 ) : Serializable {
     val timeStamp = Date().time
 }

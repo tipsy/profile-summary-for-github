@@ -7,6 +7,7 @@ function donutChart(objectName, data) {
     var labels = Object.keys(data[objectName]);
     var values = Object.values(data[objectName]);
     var colors = repeatColors(labels.length);
+    var tooltipInfo = null;
     window.languageColors = window.languageColors || {};
     if ("langRepoCount" === objectName) {
         // when the first language-set is loaded, set a color-profile for all languages
@@ -17,9 +18,11 @@ function donutChart(objectName, data) {
         labels.forEach((language, i) => colors[i] = languageColors[language]);
     }
     if (objectName === "repoCommitCount") {
+        tooltipInfo = data[objectName + "Descriptions"]; // high quality programming
         arrayRotate(colors, 2); // change starting color
     }
     if (objectName === "repoStarCount") {
+        tooltipInfo = data[objectName + "Descriptions"]; // high quality programming
         arrayRotate(colors, 4); // change starting color
     }
     new Chart(canvas.getContext("2d"), {
@@ -39,6 +42,15 @@ function donutChart(objectName, data) {
                 labels: {
                     boxWidth: 12
                 }
+            },
+            tooltips: {
+                callbacks: {
+                    afterLabel: function (tooltipItem, data) {
+                        if (tooltipInfo !== null) {
+                            return tooltipInfo[data["labels"][tooltipItem["index"]]];
+                        }
+                    }
+                },
             },
             onClick: function (e, data) {
                 try {
@@ -64,7 +76,7 @@ function lineChart(objectName, data) {
         data: {
             labels: Object.keys(data[objectName]),
             datasets: [{
-                label: 'Commits',
+                label: "Commits",
                 data: Object.values(data[objectName]),
                 backgroundColor: "rgba(67, 142, 233, 0.2)",
                 borderColor: "rgba(67, 142, 233, 1)",
