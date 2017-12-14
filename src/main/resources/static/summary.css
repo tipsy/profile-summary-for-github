@@ -59,12 +59,13 @@ i.fa {
 }
 
 .chart-row {
-    border-top: 1px solid rgba(0, 0, 0, 0.1)
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
 }
 
 .chart-container {
     position: relative;
-    float: left;
 }
 
 .chart-container--third {

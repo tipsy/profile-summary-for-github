@@ -24,7 +24,7 @@
                 <h2>Repos per Language</h2>
                 <canvas id="langRepoCount"></canvas>
             </div>
-            <div class="chart-container chart-container--third">
+            <div v-if="Object.keys(data.langStarCount).length > 0" class="chart-container chart-container--third">
                 <h2>Stars per Language</h2>
                 <canvas id="langStarCount"></canvas>
             </div>
@@ -40,7 +40,7 @@
                 </h2>
                 <canvas id="repoCommitCount"></canvas>
             </div>
-            <div class="chart-container chart-container--half">
+            <div v-if="Object.keys(data.repoStarCount).length > 0" class="chart-container chart-container--half">
                 <h2>Stars per Repo
                     <small v-if="Object.keys(data.repoStarCount).length == 10">(top 10)</small>
                 </h2>

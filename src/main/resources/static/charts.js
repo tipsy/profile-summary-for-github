@@ -1,4 +1,8 @@
 function donutChart(objectName, data) {
+    var canvas = document.getElementById(objectName);
+    if (canvas === null) {
+        return;
+    }
     var userId = document.body.getAttribute("data-user-id");
     var labels = Object.keys(data[objectName]);
     var values = Object.values(data[objectName]);
@@ -18,7 +22,7 @@ function donutChart(objectName, data) {
     if (objectName === "repoStarCount") {
         arrayRotate(colors, 4); // change starting color
     }
-    new Chart(document.getElementById(objectName).getContext("2d"), {
+    new Chart(canvas.getContext("2d"), {
         type: "doughnut",
         data: {
             labels: labels,
