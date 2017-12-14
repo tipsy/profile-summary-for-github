@@ -60,17 +60,16 @@ object UserCtrl {
     }
 
     fun hasStarredRepo(username: String): Boolean {
-        try {
-            if (username.isEmpty()) {
-                return false
-            }
-            if (Cache.contains(username)) {
-                return true
-            }
-            val watchers = watcherService.getWatchers(githubProfileSummary).map { it.login.toLowerCase() }
-            return watchers.contains(username.toLowerCase())
-        } catch (e: Exception) {
+        if (username.isEmpty()) {
             return false
+        }
+        if (Cache.contains(username)) {
+            return true
+        }
+        return try {
+            watcherService.getWatchers(githubProfileSummary).map { it.login.toLowerCase() }.contains(username.toLowerCase())
+        } catch (e: Exception) {
+            false
         }
     }
 
