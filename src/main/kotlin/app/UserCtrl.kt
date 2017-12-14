@@ -59,9 +59,9 @@ object UserCtrl {
         return Cache.getUserProfile(username.toLowerCase())!!
     }
 
-    fun hasStarredRepo(username: String?): Boolean {
+    fun hasStarredRepo(username: String): Boolean {
         try {
-            if (username == null || username.isEmpty()) {
+            if (username.isEmpty()) {
                 return false
             }
             if (Cache.contains(username)) {

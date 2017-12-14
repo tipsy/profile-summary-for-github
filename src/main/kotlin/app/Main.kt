@@ -35,10 +35,10 @@ fun main(args: Array<String>) {
     }
 
     app.get("/search") { ctx ->
-        val user = ctx.queryParam("q")
+        val user = ctx.queryParam("q") ?: ""
         when (UserCtrl.hasStarredRepo(user)) {
             true -> ctx.redirect("/user/$user")
-            false -> ctx.renderVelocity("search.vm", model("q", user ?: ""))
+            false -> ctx.renderVelocity("search.vm", model("q", user))
         }
     }
 
