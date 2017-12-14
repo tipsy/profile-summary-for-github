@@ -47,7 +47,7 @@ function donutChart(objectName, data) {
                 callbacks: {
                     afterLabel: function (tooltipItem, data) {
                         if (tooltipInfo !== null) {
-                            return tooltipInfo[data["labels"][tooltipItem["index"]]];
+                            return wordWrap(tooltipInfo[data["labels"][tooltipItem["index"]]], 45);
                         }
                     }
                 },
@@ -126,4 +126,23 @@ function arrayRotate(arr, n) {
         arr.push(arr.shift());
     }
     return arr
+}
+
+function wordWrap(str, n) {
+    if (str === null) {
+        return null;
+    }
+    var currentLine = [];
+    var resultLines = [];
+    str.split(" ").forEach(word => {
+        currentLine.push(word);
+        if (currentLine.join(" ").length > n) {
+            resultLines.push(currentLine.join(" "));
+            currentLine = [];
+        }
+    });
+    if (currentLine.length > 0) {
+        resultLines.push(currentLine.join(" "));
+    }
+    return resultLines
 }
