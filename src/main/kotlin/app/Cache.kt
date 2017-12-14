@@ -10,7 +10,7 @@ object Cache {
 
     // Put userProfile in cache, then serialize cache and write it to disk
     fun putUserProfile(userProfile: UserProfile) {
-        userProfiles[userProfile.user.login] = userProfile
+        userProfiles[userProfile.user.login.toLowerCase()] = userProfile
         val byteArrayOutputStream = ByteArrayOutputStream()
         ObjectOutputStream(byteArrayOutputStream).writeObject(userProfiles)
         File(path).apply {
@@ -22,7 +22,7 @@ object Cache {
         }
     }
 
-    fun getUserProfile(username: String) = userProfiles[username]
+    fun getUserProfile(username: String) = userProfiles[username.toLowerCase()]
 
     // Read cache from disk, return empty map if no cache file exists
     @Suppress("UNCHECKED_CAST")
@@ -34,7 +34,7 @@ object Cache {
         mutableMapOf()
     }
 
-    fun contains(username: String?) = userProfiles[username] != null
-    fun invalid(username: String) = Date().time - (userProfiles[username]?.timeStamp ?: 0) > (60 * 60 * 24 * 1000) // 1 day in ms
+    fun contains(username: String) = userProfiles[username.toLowerCase()] != null
+    fun invalid(username: String) = Date().time - (userProfiles[username.toLowerCase()]?.timeStamp ?: 0) > (60 * 60 * 24 * 1000) // 1 day in ms
 
 }

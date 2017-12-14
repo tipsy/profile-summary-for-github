@@ -56,19 +56,19 @@ object UserCtrl {
                     repoStarCountDescriptions
             ))
         }
-        return Cache.getUserProfile(username)!!
+        return Cache.getUserProfile(username.toLowerCase())!!
     }
 
     fun hasStarredRepo(username: String?): Boolean {
         try {
-            if (username.isNullOrEmpty()) {
+            if (username == null || username.isEmpty()) {
                 return false
             }
             if (Cache.contains(username)) {
                 return true
             }
-            val watchers = watcherService.getWatchers(githubProfileSummary).map { it.login }
-            return watchers.contains(username)
+            val watchers = watcherService.getWatchers(githubProfileSummary).map { it.login.toLowerCase() }
+            return watchers.contains(username.toLowerCase())
         } catch (e: Exception) {
             return false
         }
