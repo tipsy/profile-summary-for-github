@@ -31,7 +31,7 @@ object UserCtrl {
         if (Cache.invalid(username)) {
             val user = userService.getUser(username)
             val repos = repoService.getRepositories(username).filter { !it.isFork && it.size != 0 }
-            val repoCommits = repos.parallelStream().map { it to commitsForRepo(it).filter { it.author?.login == username } }.toList().toMap()
+            val repoCommits = repos.parallelStream().map { it to commitsForRepo(it).filter { it.author?.login.equals(username, ignoreCase = true) } }.toList().toMap()
             val langRepoGrouping = repos.groupingBy { (it.language ?: "Unknown") }
 
             val quarterCommitCount = repoCommits.flatMap { it.value }.groupingBy { getYearAndQuarter(it) }.fold(0) { acc, _ -> acc + 1 }.toSortedMap()
