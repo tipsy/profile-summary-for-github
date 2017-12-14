@@ -19,11 +19,11 @@ function donutChart(objectName, data) {
     }
     if (objectName === "repoCommitCount") {
         tooltipInfo = data[objectName + "Descriptions"]; // high quality programming
-        arrayRotate(colors, 2); // change starting color
+        arrayRotate(colors, 4); // change starting color
     }
     if (objectName === "repoStarCount") {
         tooltipInfo = data[objectName + "Descriptions"]; // high quality programming
-        arrayRotate(colors, 4); // change starting color
+        arrayRotate(colors, 2); // change starting color
     }
     new Chart(canvas.getContext("2d"), {
         type: "doughnut",
