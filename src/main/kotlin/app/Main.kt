@@ -5,6 +5,7 @@ import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.embeddedserver.jetty.websocket.WsSession
 import io.javalin.translator.template.TemplateUtil.model
+import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -38,7 +39,7 @@ fun main(args: Array<String>) {
         val user = ctx.queryParam("q") ?: ""
         when (UserCtrl.hasStarredRepo(user)) {
             true -> ctx.redirect("/user/$user")
-            false -> ctx.renderVelocity("search.vm", model("q", user))
+            false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user)))
         }
     }
 
