@@ -6,6 +6,8 @@ import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.RepositoryService
 import org.eclipse.egit.github.core.service.UserService
 import org.eclipse.egit.github.core.service.WatcherService
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 object GhService {
 
@@ -16,10 +18,6 @@ object GhService {
     private val userServices = clients.map { UserService(it) }
     private val watcherServices = clients.map { WatcherService(it) }
 
-    init { // init remainingRequests by performing a request
-        repoServices.forEach { it.getRepository("tipsy", "github-profile-summary") }
-    }
-
     val repos: RepositoryService get() = repoServices.maxBy { it.client.remainingRequests }!!
     val commits: CommitService get() = commitServices.maxBy { it.client.remainingRequests }!!
     val users: UserService get() = userServices.maxBy { it.client.remainingRequests }!!
@@ -27,4 +25,13 @@ object GhService {
 
     val remainingRequests: Int get() = clients.sumBy { it.remainingRequests }
 
+    init { // create timer to ping clients every ten minutes to make sure remainingRequests is correct
+        Timer().scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                repoServices.forEach { it.getRepository("tipsy", "github-profile-summary") }
+            }
+        }, 0, TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES))
+    }
+
 }
+

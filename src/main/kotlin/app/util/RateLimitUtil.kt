@@ -26,7 +26,7 @@ object RateLimitUtil {
             ctx.result("You can't spam this much. I'll give you a new request every five seconds.")
         }
 
-        Timer().scheduleAtFixedRate(decrementAllCounters(), 0, 5000)
+        Timer().scheduleAtFixedRate(decrementAllCounters(), 0, 5000) // every 5s
 
     }
 
