@@ -67,7 +67,7 @@ object UserCtrl {
             return true
         }
         return try {
-            watcherService.getWatchers(githubProfileSummary).map { it.login.toLowerCase() }.contains(username.toLowerCase())
+            watcherService.pageWatched(username, 1, 100).first().map { it.name }.contains(githubProfileSummary.name)
         } catch (e: Exception) {
             false
         }
