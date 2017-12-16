@@ -18,3 +18,11 @@ To run the app with an api-token, first generate a token at
 then launch the jar with the token:
 
 * `java -Doauth-token=your-token -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
+
+## run locally with docker
+
+* `git clone https://github.com/tipsy/github-profile-summary.git`
+* `cd github-profile-summary`
+* `docker build -t github-profile-summary .`
+* `docker run -it --rm --name github-profile-summary -p 7070:7070 github-profile-summary`
+* browse to http://localhost:7070
