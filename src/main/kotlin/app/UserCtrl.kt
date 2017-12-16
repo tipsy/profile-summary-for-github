@@ -1,14 +1,8 @@
 package app
 
-import app.util.Heroku
 import org.eclipse.egit.github.core.Repository
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
-import org.eclipse.egit.github.core.client.GitHubClient
-import org.eclipse.egit.github.core.service.CommitService
-import org.eclipse.egit.github.core.service.RepositoryService
-import org.eclipse.egit.github.core.service.UserService
-import org.eclipse.egit.github.core.service.WatcherService
 import java.io.Serializable
 import java.util.*
 import kotlin.streams.toList
@@ -17,20 +11,12 @@ object UserCtrl {
 
     // https://javadoc.io/doc/org.eclipse.mylyn.github/org.eclipse.egit.github.core/2.1.5
 
-    val client = GitHubClient().apply {
-        setOAuth2Token(Heroku.getOauthToken() ?: System.getProperty("oauth-token"))
-    }
-
-    private val repoService = RepositoryService(client)
-    private val commitService = CommitService(client)
-    private val userService = UserService(client)
-    private val watcherService = WatcherService(client)
-    private val githubProfileSummary = repoService.getRepository("tipsy", "github-profile-summary")
+    private val githubProfileSummary = GhService.repos.getRepository("tipsy", "github-profile-summary")
 
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
-            val user = userService.getUser(username)
-            val repos = repoService.getRepositories(username).filter { !it.isFork && it.size != 0 }
+            val user = GhService.users.getUser(username)
+            val repos = GhService.repos.getRepositories(username).filter { !it.isFork && it.size != 0 }
             val repoCommits = repos.parallelStream().map { it to commitsForRepo(it).filter { it.author?.login.equals(username, ignoreCase = true) } }.toList().toMap()
             val langRepoGrouping = repos.groupingBy { (it.language ?: "Unknown") }
 
@@ -67,14 +53,14 @@ object UserCtrl {
             return true
         }
         return try {
-            watcherService.pageWatched(username, 1, 100).first().map { it.name }.contains(githubProfileSummary.name)
+            GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains(githubProfileSummary.name)
         } catch (e: Exception) {
             false
         }
     }
 
     private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {
-        commitService.getCommits(repo)
+        GhService.commits.getCommits(repo)
     } catch (e: Exception) {
         listOf()
     }

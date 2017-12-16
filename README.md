@@ -11,10 +11,12 @@
 * `mvn install`
 * `java -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
 
-If no api-token is set, you only get ~50 requests/hour  
+If no api-token is set, you only get ~50 requests/hour
 
-To run the app with an api-token, first generate a token at 
-[https://github.com/settings/tokens](https://github.com/settings/tokens), 
+To run the app with an api-token, first generate a token at
+[https://github.com/settings/tokens](https://github.com/settings/tokens),
 then launch the jar with the token:
 
-* `java -Doauth-token=your-token -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
+* `java -Dapi-tokens=your-token -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
+
+You can use a comma-separated list of tokens to increase your rate-limit
