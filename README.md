@@ -3,7 +3,7 @@
 ## live at [https://github-profile-summary.com/](https://github-profile-summary.com/)
 
 ## screenshot
-![github-profile-summary](https://user-images.githubusercontent.com/1521451/33906301-da659f12-df81-11e7-9fc4-1c47d62e2a95.PNG)
+![screenshot](https://user-images.githubusercontent.com/1521451/34072014-4451dbf6-e280-11e7-90a7-32ad1f313541.PNG)
 
 ## run locally
 * `git clone https://github.com/tipsy/github-profile-summary.git`
