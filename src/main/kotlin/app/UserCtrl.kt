@@ -11,8 +11,6 @@ object UserCtrl {
 
     // https://javadoc.io/doc/org.eclipse.mylyn.github/org.eclipse.egit.github.core/2.1.5
 
-    private val githubProfileSummary = GhService.repos.getRepository("tipsy", "github-profile-summary")
-
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
             val user = GhService.users.getUser(username)
@@ -53,7 +51,7 @@ object UserCtrl {
             return true
         }
         return try {
-            GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains(githubProfileSummary.name)
+            GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("github-profile-summary")
         } catch (e: Exception) {
             false
         }
