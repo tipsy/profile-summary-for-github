@@ -82,6 +82,10 @@ i.fa {
         width: 100%;
     }
 
+    .chart-row {
+        display: block;
+    }
+
     .commits-per-quarter {
         display: none;
     }

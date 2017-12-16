@@ -51,7 +51,7 @@ footer a {
 }
 
 canvas {
-  user-select: none;
+    user-select: none;
 }
 
 .search-term {
@@ -102,4 +102,10 @@ input {
 
 #rate-limit-count {
     font-weight: 700;
+}
+
+@media (max-width: 480px) {
+    .rate-limit {
+        bottom: 80px;
+    }
 }
