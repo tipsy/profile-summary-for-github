@@ -2,6 +2,7 @@ package app
 
 import java.io.*
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object Cache {
 
@@ -35,6 +36,6 @@ object Cache {
     }
 
     fun contains(username: String) = userProfiles[username.toLowerCase()] != null
-    fun invalid(username: String) = Date().time - (userProfiles[username.toLowerCase()]?.timeStamp ?: 0) > (60 * 60 * 24 * 1000) // 1 day in ms
+    fun invalid(username: String) = Date().time - (userProfiles[username.toLowerCase()]?.timeStamp ?: 0) > TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
 
 }

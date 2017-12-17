@@ -50,6 +50,10 @@ footer a {
     align-items: center;
 }
 
+canvas {
+    user-select: none;
+}
+
 .search-term {
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: rgba(0, 0, 0, 0.025);
@@ -98,4 +102,10 @@ input {
 
 #rate-limit-count {
     font-weight: 700;
+}
+
+@media (max-width: 480px) {
+    .rate-limit {
+        bottom: 80px;
+    }
 }
