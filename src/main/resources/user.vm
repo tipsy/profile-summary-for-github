@@ -12,7 +12,7 @@
             <div><i class="fa fa-fw fa-clock-o"></i>Joined GitHub {{ moment(user.createdAt).fromNow() }}</div>
             <div v-if="user.email"><i class="fa fa-fw fa-envelope"></i> {{ user.email }}</div>
             <div v-if="user.company"><i class="fa fa-fw  fa-building"></i>{{ user.company }}</div>
-            <div><i class="fa fa-fw fa-external-link"></i><a :href="user.htmlUrl" target="_blank">View profile on GitHub</a></div>
+            <div><i class="fa fa-fw fa-external-link"></i><a :href="user.htmlUrl" target="_blank">View your profile on GitHub</a></div>
         </div>
         <div class="chart-container commits-per-quarter">
             <canvas id="quarterCommitCount"></canvas>
