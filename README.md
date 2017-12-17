@@ -27,5 +27,5 @@ You can use a comma-separated list of tokens to increase your rate-limit
 * `cd github-profile-summary`
 * `docker build -t github-profile-summary .`
 * `docker run -it --rm --name github-profile-summary -p 7070:7070 github-profile-summary`
-* OR with a token `docker run -it --rm --name github-profile-summary -p 7070:7070 -e "TOKEN=mytoken" github-profile-summary`
+* OR with a token `docker run -it --rm --name github-profile-summary -p 7070:7070 -e "TOKENS=mytoken1,mytoken2" github-profile-summary`
 * browse to http://localhost:7070
