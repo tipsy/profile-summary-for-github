@@ -21,7 +21,7 @@ then launch the jar with the token:
 
 You can use a comma-separated list of tokens to increase your rate-limit
 
-You can also access summary for any GitHub profile using `-Dno-restriction=true`:
+You can build a profile summary for any GitHub profile using `-Dunrestricted=true`:
 
 * `java -Dno-restriction=true -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
 
