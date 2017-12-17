@@ -21,6 +21,10 @@ then launch the jar with the token:
 
 You can use a comma-separated list of tokens to increase your rate-limit
 
+You can also access summary for any GitHub profile using `-Dno-restriction=true`:
+
+* `java -Dno-restriction=true -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
+
 ## run locally with docker
 
 * `git clone https://github.com/tipsy/github-profile-summary.git`

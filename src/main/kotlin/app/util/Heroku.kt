@@ -11,6 +11,7 @@ object Heroku {
 
     // Get oauth-token from Heroku, or return null (localhost)
     fun getApiTokens() = ProcessBuilder().environment()["API_TOKENS"] ?: System.getProperty("api-tokens")
+    fun getUnrestrictedAccess() = ProcessBuilder().environment()["NO_RESTRICTIONS"] ?: System.getProperty("no-restriction")
 
     // Force HTTPS for all requests
     fun enableSslRedirect(app: Javalin) {
