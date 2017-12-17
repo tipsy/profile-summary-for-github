@@ -20,3 +20,12 @@ then launch the jar with the token:
 * `java -Dapi-tokens=your-token -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
 
 You can use a comma-separated list of tokens to increase your rate-limit
+
+## run locally with docker
+
+* `git clone https://github.com/tipsy/github-profile-summary.git`
+* `cd github-profile-summary`
+* `docker build -t github-profile-summary .`
+* `docker run -it --rm --name github-profile-summary -p 7070:7070 github-profile-summary`
+* OR with a token `docker run -it --rm --name github-profile-summary -p 7070:7070 -e "TOKENS=mytoken1,mytoken2" github-profile-summary`
+* browse to http://localhost:7070
