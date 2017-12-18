@@ -41,12 +41,8 @@
             (function () {
                 var wsProtocol = window.location.protocol.indexOf("https") > -1 ? "wss" : "ws";
                 var ws = new WebSocket(wsProtocol + "://" + location.hostname + ":" + location.port + "/rate-limit-status")
-                ws.onmessage = function (msg) {
-                    if (msg.data === "0") {
-                        document.querySelector(".rate-limit").classList.add("rate-limited");
-                    } else {
-                        document.querySelector(".rate-limit").classList.remove("rate-limited");
-                    }
+                ws.onmessage = msg => {
+                    document.querySelector(".rate-limit").classList.toggle("rate-limited", msg.data === "0");
                     document.getElementById("rate-limit-count").innerHTML = msg.data;
                 }
             })();
