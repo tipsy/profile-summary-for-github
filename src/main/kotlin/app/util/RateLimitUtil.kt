@@ -4,9 +4,14 @@ import io.javalin.Javalin
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-// This is a very naive IP-based rate-limiting mechanism
-// There is a 1 request per 5 seconds limit, but with a 25 request buffer
-// A HashMap holds all the IPs and counters, which are incremented on every request and decremented every 5 seconds
+/**
+ * A very naive IP-based rate-limiting mechanism
+ *
+ * A HashMap holds IPs and counters, and the rules are
+ * - incremented counter on every request
+ * - decremented all counters every 5 seconds
+ * - block request if counter > 25
+ */
 object RateLimitUtil {
 
     class TerribleRateLimitException : Exception()
