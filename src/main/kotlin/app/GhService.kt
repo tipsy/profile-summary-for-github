@@ -14,7 +14,7 @@ object GhService {
 
     private val log = LoggerFactory.getLogger(GhService.javaClass)
 
-    private val tokens = Heroku.getApiTokens()?.split(",") ?: listOf("") // empty token is limited to 60 requests
+    private val tokens = Config.getApiTokens()?.split(",") ?: listOf("") // empty token is limited to 60 requests
     private val clients = tokens.map { token -> GitHubClient().apply { setOAuth2Token(token) } }
     private val repoServices = clients.map { RepositoryService(it) }
     private val commitServices = clients.map { CommitService(it) }

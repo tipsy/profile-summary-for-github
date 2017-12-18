@@ -15,10 +15,10 @@ fun main(args: Array<String>) {
 
     val log = LoggerFactory.getLogger("app.MainKt")
 
-    val unrestricted = Heroku.getUnrestrictedState()?.toBoolean() ?: false
+    val unrestricted = Config.getUnrestrictedState()?.toBoolean() ?: false
 
     val app = Javalin.create().apply {
-        port(Heroku.getPort() ?: 7070)
+        port(Config.getPort() ?: 7070)
         enableStandardRequestLogging()
         enableDynamicGzip()
     }
