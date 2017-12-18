@@ -1,6 +1,5 @@
 package app
 
-import app.util.Heroku
 import org.eclipse.egit.github.core.client.GitHubClient
 import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.RepositoryService
