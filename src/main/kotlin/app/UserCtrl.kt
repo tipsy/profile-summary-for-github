@@ -65,7 +65,7 @@ object UserCtrl {
 
     private fun getYearAndQuarter(it: RepositoryCommit): String {
         val date = it.commit.committer.date
-        return "${(1900 + date.year)}-Q${date.getMonth() / 3 + 1}"
+        return "${(1900 + date.year)}-Q${date.month / 3 + 1}"
     }
 
 }
