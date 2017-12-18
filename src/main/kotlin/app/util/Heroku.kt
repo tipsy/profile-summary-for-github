@@ -10,10 +10,10 @@ object Heroku {
     }
 
     // Get 'api-tokens' from Heroku/System, or return null if not set
-    fun getApiTokens() = ProcessBuilder().environment()["API_TOKENS"] ?: System.getProperty("api-tokens")
+    fun getApiTokens(): String? = ProcessBuilder().environment()["API_TOKENS"] ?: System.getProperty("api-tokens")
 
     // Get 'unrestricted' state from Heroku/System, or return null if not set
-    fun getUnrestrictedState() = ProcessBuilder().environment()["UNRESTRICTED"] ?: System.getProperty("unrestricted")
+    fun getUnrestrictedState(): String? = ProcessBuilder().environment()["UNRESTRICTED"] ?: System.getProperty("unrestricted")
 
     // Force HTTPS for all requests
     fun enableSslRedirect(app: Javalin) {
