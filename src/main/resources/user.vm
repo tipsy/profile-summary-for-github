@@ -80,17 +80,10 @@
             });
         }).catch(function (error) {
             cancelOrHideLoadScreen();
-            if (error.response.status === 404) {
-                document.querySelector(".content").insertAdjacentHTML("beforeEnd",
-                        "<h2>User not found ...</h2>" +
-                        "<p>This should only happen when running locally in 'unrestricted' mode.</p>"
-                );
-            } else {
-                document.querySelector(".content").insertAdjacentHTML("beforeEnd",
-                        "<h2>Something went wrong ...</h2>" +
-                        "<p>This usually means the app has been rate-limited. Check the lower right corner.</p>"
-                );
-            }
+            document.querySelector(".content").insertAdjacentHTML("beforeEnd", error.response.status === 404
+                    ? "<h2>User not found ...</h2><p>This should only happen when running locally in 'unrestricted' mode.</p>"
+                    : "<h2>Something went wrong ...</h2><p>This usually means the app has been rate-limited. Check the lower right corner.</p>"
+            );
         });
 
         function showLoadScreen() {
