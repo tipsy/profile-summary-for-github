@@ -58,9 +58,9 @@
 </div>
 <script>
     (function () {
-        var userId = document.body.getAttribute("data-user-id");
-        var loadScreen = document.querySelector(".load-screen");
-        var loadScreenTimeout = setTimeout(showLoadScreen, 500);
+        let userId = document.body.getAttribute("data-user-id");
+        let loadScreen = document.querySelector(".load-screen");
+        let loadScreenTimeout = setTimeout(showLoadScreen, 500);
         axios.get("/api/user/" + userId).then(function (response) {
             cancelOrHideLoadScreen();
             new Vue({
@@ -70,7 +70,7 @@
                     user: response.data.user
                 },
                 mounted: function () {
-                    lineChart("quarterCommitCount", response.data)
+                    lineChart("quarterCommitCount", response.data);
                     donutChart("langRepoCount", response.data);
                     donutChart("langStarCount", response.data);
                     donutChart("langCommitCount", response.data);
@@ -93,7 +93,7 @@
         }
 
         function cancelOrHideLoadScreen() {
-            clearTimeout(loadScreenTimeout)
+            clearTimeout(loadScreenTimeout);
             loadScreen.style.display = "none";
         }
     })()
