@@ -88,12 +88,8 @@
 
         function showLoadScreen() {
             loadScreen.style.opacity = "1";
-            setTimeout(function () {
-                loadScreen.insertAdjacentHTML("beforeEnd", "<h3>This could take some time ...</h3>");
-            }, 2500);
-            setTimeout(function () {
-                loadScreen.insertAdjacentHTML("beforeEnd", "<h3>This user has a lot of repos!</h3>");
-            }, 7500);
+            setTimeout(() => loadScreen.insertAdjacentHTML("beforeEnd", "<h3>This could take some time ...</h3>"), 2500);
+            setTimeout(() => loadScreen.insertAdjacentHTML("beforeEnd", "<h3>This user has a lot of repos!</h3>"), 7500);
         }
 
         function cancelOrHideLoadScreen() {
