@@ -23,49 +23,57 @@ fun main(args: Array<String>) {
         enableDynamicGzip()
     }
 
-    app.get("/api/user/:user") { ctx ->
-        val user = ctx.param("user")!!
-        when (UserCtrl.hasStarredRepo(user) || unrestricted) {
-            true -> ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
-            false -> ctx.status(400)
+    app.apply { // add routes
+
+        get("/api/user/:user") { ctx ->
+            val user = ctx.param("user")!!
+            when (UserCtrl.hasStarredRepo(user) || unrestricted) {
+                true -> ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
+                false -> ctx.status(400)
+            }
         }
-    }
 
-    app.get("/user/:user") { ctx ->
-        val user = ctx.param("user")!!
-        when (UserCtrl.hasStarredRepo(user) || unrestricted) {
-            true -> ctx.renderVelocity("user.vm", model("user", user))
-            false -> ctx.redirect("/search?q=$user")
+        get("/user/:user") { ctx ->
+            val user = ctx.param("user")!!
+            when (UserCtrl.hasStarredRepo(user) || unrestricted) {
+                true -> ctx.renderVelocity("user.vm", model("user", user))
+                false -> ctx.redirect("/search?q=$user")
+            }
         }
-    }
 
-    app.get("/search") { ctx ->
-        val user = ctx.queryParam("q") ?: ""
-        when (UserCtrl.hasStarredRepo(user) || (unrestricted && user != "")) {
-            true -> ctx.redirect("/user/$user")
-            false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user)))
+        get("/search") { ctx ->
+            val user = ctx.queryParam("q") ?: ""
+            when (UserCtrl.hasStarredRepo(user) || (unrestricted && user != "")) {
+                true -> ctx.redirect("/user/$user")
+                false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user)))
+            }
         }
-    }
 
-    app.exception(Exception::class.java) { e, ctx ->
-        log.warn("Uncaught exception", e)
-        ctx.status(500)
-    }
-
-    app.exception(RequestException::class.java) { e, ctx ->
-        if (e.message == "Not Found (404)") {
-            ctx.status(404)
+        ws("/rate-limit-status") { ws ->
+            ws.onConnect { session -> Timer().scheduleAtFixedRate(reportRemainingRequests(session), 0, 1000) }
         }
+
     }
 
-    app.error(404) { ctx ->
-        if (ctx.header(Header.ACCEPT)?.contains("application/json") == false) {
-            ctx.redirect("/search")
+    app.apply { // add exception/error handlers
+
+        exception(Exception::class.java) { e, ctx ->
+            log.warn("Uncaught exception", e)
+            ctx.status(500)
         }
-    }
 
-    app.ws("/rate-limit-status") { ws ->
-        ws.onConnect { session -> Timer().scheduleAtFixedRate(reportRemainingRequests(session), 0, 1000) }
+        exception(RequestException::class.java) { e, ctx ->
+            if (e.message == "Not Found (404)") {
+                ctx.status(404)
+            }
+        }
+
+        error(404) { ctx ->
+            if (ctx.header(Header.ACCEPT)?.contains("application/json") == false) {
+                ctx.redirect("/search")
+            }
+        }
+
     }
 
     RateLimitUtil.enableTerribleRateLimiting(app)
