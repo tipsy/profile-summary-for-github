@@ -1,13 +1,13 @@
 function donutChart(objectName, data) {
-    var canvas = document.getElementById(objectName);
+    let canvas = document.getElementById(objectName);
     if (canvas === null) {
         return;
     }
-    var userId = document.body.getAttribute("data-user-id");
-    var labels = Object.keys(data[objectName]);
-    var values = Object.values(data[objectName]);
-    var colors = repeatColors(labels.length);
-    var tooltipInfo = null;
+    let userId = document.body.getAttribute("data-user-id");
+    let labels = Object.keys(data[objectName]);
+    let values = Object.values(data[objectName]);
+    let colors = createColorArray(labels.length);
+    let tooltipInfo = null;
     window.languageColors = window.languageColors || {};
     if ("langRepoCount" === objectName) {
         // when the first language-set is loaded, set a color-profile for all languages
@@ -54,8 +54,8 @@ function donutChart(objectName, data) {
             },
             onClick: function (e, data) {
                 try {
-                    var label = labels[data[0]._index];
-                    var canvas = data[0]._chart.canvas.id;
+                    let label = labels[data[0]._index];
+                    let canvas = data[0]._chart.canvas.id;
                     if (canvas === "repoStarCount" || canvas === "repoCommitCount") {
                         window.open("https://github.com/" + userId + "/" + label, "_blank");
                         window.focus();
@@ -68,6 +68,47 @@ function donutChart(objectName, data) {
             }
         }
     });
+
+    function createColorArray(length) {
+        let array = [];
+        while (array.length < length) {
+            array = array.concat([
+                "#54ca76",
+                "#f5c452",
+                "#f2637f",
+                "#9261f3",
+                "#31a4e6",
+                "#55cbcb",
+            ]);
+        }
+        return array;
+    }
+
+    function arrayRotate(arr, n) {
+        for (let i = 0; i < n; i++) {
+            arr.push(arr.shift());
+        }
+        return arr
+    }
+
+    function wordWrap(str, n) {
+        if (str === null) {
+            return null;
+        }
+        let currentLine = [];
+        let resultLines = [];
+        str.split(" ").forEach(word => {
+            currentLine.push(word);
+            if (currentLine.join(" ").length > n) {
+                resultLines.push(currentLine.join(" "));
+                currentLine = [];
+            }
+        });
+        if (currentLine.length > 0) {
+            resultLines.push(currentLine.join(" "));
+        }
+        return resultLines
+    }
 }
 
 function lineChart(objectName, data) {
@@ -104,45 +145,3 @@ function lineChart(objectName, data) {
     });
 }
 
-var rainbowColors = [
-    "#54ca76",
-    "#f5c452",
-    "#f2637f",
-    "#9261f3",
-    "#31a4e6",
-    "#55cbcb",
-];
-
-function repeatColors(length) {
-    var array = [];
-    while (array.length < length) {
-        array = array.concat(rainbowColors);
-    }
-    return array;
-}
-
-function arrayRotate(arr, n) {
-    for (var i = 0; i < n; i++) {
-        arr.push(arr.shift());
-    }
-    return arr
-}
-
-function wordWrap(str, n) {
-    if (str === null) {
-        return null;
-    }
-    var currentLine = [];
-    var resultLines = [];
-    str.split(" ").forEach(word => {
-        currentLine.push(word);
-        if (currentLine.join(" ").length > n) {
-            resultLines.push(currentLine.join(" "));
-            currentLine = [];
-        }
-    });
-    if (currentLine.length > 0) {
-        resultLines.push(currentLine.join(" "));
-    }
-    return resultLines
-}
