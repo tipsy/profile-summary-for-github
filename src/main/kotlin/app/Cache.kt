@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 
 object Cache {
 
-    private const val path = "cache/userinfo";
+    private const val path = "cache/userinfo"
     private val userProfiles = readUserProfilesFromDisk()
 
     // Put userProfile in cache, then serialize cache and write it to disk

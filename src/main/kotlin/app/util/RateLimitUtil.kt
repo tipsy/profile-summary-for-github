@@ -34,7 +34,7 @@ object RateLimitUtil {
         override fun run() {
             ipReqCount.forEach { ip, count ->
                 if (count > 0) {
-                    ipReqCount[ip] = ipReqCount[ip]!! - 1;
+                    ipReqCount[ip] = ipReqCount[ip]!! - 1
                 }
             }
         }
