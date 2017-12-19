@@ -23,7 +23,7 @@ You can use a comma-separated list of tokens to increase your rate-limit
 
 You can build a profile summary for any GitHub profile using `-Dunrestricted=true`:
 
-* `java -Dno-restriction=true -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
+* `java -Dunrestricted=true -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
 
 ## run locally with docker
 
