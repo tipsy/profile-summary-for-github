@@ -9,8 +9,6 @@ import kotlin.streams.toList
 
 object UserCtrl {
 
-    // https://javadoc.io/doc/org.eclipse.mylyn.github/org.eclipse.egit.github.core/2.1.5
-
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
             val user = GhService.users.getUser(username)

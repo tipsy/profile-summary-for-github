@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit
 
 object GhService {
 
+    // https://javadoc.io/doc/org.eclipse.mylyn.github/org.eclipse.egit.github.core/2.1.5
+
     private val log = LoggerFactory.getLogger(GhService.javaClass)
 
     private val tokens = Config.getApiTokens()?.split(",") ?: listOf("") // empty token is limited to 60 requests
