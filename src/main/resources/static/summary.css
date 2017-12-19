@@ -93,12 +93,11 @@ i.fa {
 
 .social {
     position: absolute;
-    top: -1px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, .25);
-    border: 1px solid #fff;
-    padding: 4px 8px;
+    background: rgba(0, 0, 0, .04);
+    padding: 5px 8px;
     font-size: 14px;
 }
 
