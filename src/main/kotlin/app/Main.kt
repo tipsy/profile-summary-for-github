@@ -1,6 +1,6 @@
 package app
 
-import app.util.Heroku
+import app.util.HerokuUtil
 import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.core.util.Header
@@ -77,7 +77,7 @@ fun main(args: Array<String>) {
     }
 
     RateLimitUtil.enableTerribleRateLimiting(app)
-    Heroku.enableSslRedirect(app)
+    HerokuUtil.enableSslRedirect(app)
 
     app.start()
 

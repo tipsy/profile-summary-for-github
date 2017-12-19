@@ -2,7 +2,7 @@ package app.util
 
 import io.javalin.Javalin
 
-object Heroku {
+object HerokuUtil {
 
     /**
      * Force HTTPS for all requests
