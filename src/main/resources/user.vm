@@ -11,7 +11,7 @@
             <div><i class="fa fa-fw fa-database"></i>{{ user.publicRepos }} public repos</div>
             <div><i class="fa fa-fw fa-clock-o"></i>Joined GitHub {{ moment(user.createdAt).fromNow() }}</div>
             <div v-if="user.email"><i class="fa fa-fw fa-envelope"></i> {{ user.email }}</div>
-            <div v-if="user.company"><i class="fa fa-fw  fa-building"></i>{{ user.company }}</div>
+            <div v-if="user.company"><i class="fa fa-fw fa-building"></i>{{ user.company }}</div>
             <div><i class="fa fa-fw fa-external-link"></i><a :href="user.htmlUrl" target="_blank">View profile on GitHub</a></div>
         </div>
         <div class="chart-container commits-per-quarter">
@@ -47,6 +47,10 @@
                 <canvas id="repoStarCount"></canvas>
             </div>
         </div>
+        <div class="social">
+            <a class="social-btn" :href="twitterUrl" rel="nofollow" title="Share on Twitter"><i class="fa fa-fw fa-twitter"></i>Share on Twitter</a>
+            <a class="social-btn" :href="facebookUrl" rel="nofollow" title="Share on Facebook"><i class="fa fa-fw fa-facebook"></i>Share on Facebook</a>
+        </div>
     </div>
 </div>
 <div class="load-screen">
@@ -68,6 +72,20 @@
                 data: {
                     data: response.data,
                     user: response.data.user
+                },
+                computed: {
+                    profileUrl: function () {
+                        return "https://github-profile-summary.com/" + this.user.login;
+                    },
+                    shareText: function () {
+                        return this.user.login + "'s GitHub profile - Visualized:";
+                    },
+                    twitterUrl: function () {
+                        return "https://twitter.com/intent/tweet?url=" + this.profileUrl + "&text=" + this.shareText + "&via=javalin_io&related=javalin_io";
+                    },
+                    facebookUrl: function () {
+                        return "https://facebook.com/sharer.php?u=" + this.profileUrl + "&quote=" + this.shareText
+                    }
                 },
                 mounted: function () {
                     lineChart("quarterCommitCount", response.data);

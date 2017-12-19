@@ -90,3 +90,22 @@ i.fa {
         display: none;
     }
 }
+
+.social {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, .25);
+    border: 1px solid #fff;
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
+.social a + a {
+    margin-left: 25px;
+}
+
+.social a i {
+    color: #0082c8;
+}
