@@ -4,7 +4,6 @@ import app.util.HerokuUtil
 import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.core.util.Header
-import io.javalin.embeddedserver.jetty.websocket.WsSession
 import io.javalin.translator.template.TemplateUtil.model
 import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.eclipse.egit.github.core.client.RequestException
@@ -23,7 +22,8 @@ fun main(args: Array<String>) {
         enableDynamicGzip()
     }
 
-    app.apply { // add routes
+    // add routes
+    app.apply {
 
         get("/api/user/:user") { ctx ->
             val user = ctx.param("user")!!
@@ -50,12 +50,15 @@ fun main(args: Array<String>) {
         }
 
         ws("/rate-limit-status") { ws ->
-            ws.onConnect { session -> Timer().scheduleAtFixedRate(reportRemainingRequests(session), 0, 1000) }
+            ws.onConnect { session ->
+                Timer().scheduleAtFixedRate(GhService.broadcastRemainingRequests(session), 0, 1000)
+            }
         }
 
     }
 
-    app.apply { // add exception/error handlers
+    // add exception/error handlers
+    app.apply {
 
         exception(Exception::class.java) { e, ctx ->
             log.warn("Uncaught exception", e)
@@ -81,13 +84,4 @@ fun main(args: Array<String>) {
 
     app.start()
 
-}
-
-private fun reportRemainingRequests(session: WsSession) = object : TimerTask() {
-    override fun run() {
-        if (session.isOpen) {
-            return session.send(GhService.remainingRequests.toString())
-        }
-        this.cancel()
-    }
 }

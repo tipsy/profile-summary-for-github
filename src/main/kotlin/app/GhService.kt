@@ -1,5 +1,6 @@
 package app
 
+import io.javalin.embeddedserver.jetty.websocket.WsSession
 import org.eclipse.egit.github.core.client.GitHubClient
 import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.RepositoryService
@@ -34,6 +35,15 @@ object GhService {
                 repoServices.forEach { log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}") }
             }
         }, 0, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES))
+    }
+
+    fun broadcastRemainingRequests(session: WsSession) = object : TimerTask() {
+        override fun run() {
+            if (session.isOpen) {
+                return session.send(GhService.remainingRequests.toString())
+            }
+            this.cancel()
+        }
     }
 
 }
