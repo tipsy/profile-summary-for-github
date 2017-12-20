@@ -8,7 +8,6 @@ import org.eclipse.egit.github.core.service.UserService
 import org.eclipse.egit.github.core.service.WatcherService
 import org.slf4j.LoggerFactory
 import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.TimeUnit
 
 object GhService {
@@ -30,23 +29,24 @@ object GhService {
     val watchers: WatcherService get() = watcherServices.maxBy { it.client.remainingRequests }!!
 
     val remainingRequests: Int get() = clients.sumBy { it.remainingRequests }
-    val remainingRequestTimer = Timer().scheduleAtFixedRate(object : TimerTask() {
-        // ping gh-clients every other minute to make sure remainingRequests is correct
-        override fun run() {
-            repoServices.forEach { it.getRepository("tipsy", "github-profile-summary") }
-            repoServices.forEach { log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}") }
-        }
-    }, 0, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES))
 
-    val rateLimitListeners = ConcurrentLinkedQueue<WsSession>()
-    val rateLimitTimer = Timer().scheduleAtFixedRate(object : TimerTask() {
-        // report remaining requests to ws-clients every 500ms
-        override fun run() {
-            rateLimitListeners.filter { it.isOpen }.forEach { session ->
-                session.send(remainingRequests.toString())
+    init { // create timer to ping clients every other minute to make sure remainingRequests is correct
+        Timer().scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                repoServices.forEach { it.getRepository("tipsy", "github-profile-summary") }
+                repoServices.forEach { log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}") }
             }
+        }, 0, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES))
+    }
+
+    fun broadcastRemainingRequests(session: WsSession) = object : TimerTask() {
+        override fun run() {
+            if (session.isOpen) {
+                return session.send(GhService.remainingRequests.toString())
+            }
+            this.cancel()
         }
-    }, 0, 500)
+    }
 
 }
 
