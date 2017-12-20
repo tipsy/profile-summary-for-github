@@ -39,7 +39,7 @@ object GhService {
     }, 0, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES))
 
     val rateLimitListeners = ConcurrentLinkedQueue<WsSession>()
-    val rateLimitListenersTimer = Timer().scheduleAtFixedRate(object : TimerTask() {
+    val rateLimitTimer = Timer().scheduleAtFixedRate(object : TimerTask() {
         // report remaining requests to ws-clients every 500ms
         override fun run() {
             rateLimitListeners.filter { it.isOpen }.forEach { session ->
