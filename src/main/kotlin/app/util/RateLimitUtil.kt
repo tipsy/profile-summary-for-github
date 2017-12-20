@@ -40,6 +40,8 @@ object RateLimitUtil {
             ipReqCount.forEach { ip, count ->
                 if (count > 0) {
                     ipReqCount[ip] = ipReqCount[ip]!! - 1
+                } else {
+                    ipReqCount.remove(ip)
                 }
             }
         }
