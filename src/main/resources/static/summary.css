@@ -97,14 +97,28 @@ i.fa {
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, .04);
-    padding: 5px 8px;
     font-size: 14px;
+    text-align: center;
 }
 
-.social a + a {
-    margin-left: 25px;
+.social a {
+    white-space: nowrap;
+    margin: 5px 8px;
+    display: inline-block;
 }
 
 .social a i {
     color: #0082c8;
+}
+
+@media (max-width: 480px) {
+    .user-info__img,
+    footer {
+        display: none;
+    }
+    .social {
+        position: static;
+        transform: none;
+        text-align: center;
+    }
 }

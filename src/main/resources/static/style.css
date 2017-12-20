@@ -106,6 +106,9 @@ input {
 
 @media (max-width: 480px) {
     .rate-limit {
-        bottom: 80px;
+        padding: 5px 8px;
+        font-size: 13px;
+        bottom: 0;
+        right: 0;
     }
 }
