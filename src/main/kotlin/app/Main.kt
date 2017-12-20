@@ -8,7 +8,6 @@ import io.javalin.translator.template.TemplateUtil.model
 import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.eclipse.egit.github.core.client.RequestException
 import org.slf4j.LoggerFactory
-import java.util.*
 
 fun main(args: Array<String>) {
 
@@ -50,9 +49,8 @@ fun main(args: Array<String>) {
         }
 
         ws("/rate-limit-status") { ws ->
-            ws.onConnect { session ->
-                Timer().scheduleAtFixedRate(GhService.broadcastRemainingRequests(session), 0, 1000)
-            }
+            ws.onConnect { session -> GhService.rateLimitListeners.add(session) }
+            ws.onClose { session, _, _ -> GhService.rateLimitListeners.remove(session) }
         }
 
     }
