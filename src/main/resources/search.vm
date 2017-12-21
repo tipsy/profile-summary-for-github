@@ -3,7 +3,7 @@
 <div class="search-screen">
     <h1>Enter GitHub username</h1>
     <form>
-        <input type="text" name="q" placeholder="ex. 'tipsy'">
+        <input type="text" name="q" placeholder="ex. 'tipsy'" required>
     </form>
     #if($q != "")
         <h4>Couldn't build profile for <span class="search-term">$q</span></h4>
