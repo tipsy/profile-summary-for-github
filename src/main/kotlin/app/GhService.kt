@@ -33,7 +33,13 @@ object GhService {
     init { // create timer to ping clients every other minute to make sure remainingRequests is correct
         Timer().scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-                repoServices.forEach { it.getRepository("tipsy", "github-profile-summary") }
+                repoServices.forEach {
+                    try {
+                        it.getRepository("tipsy", "github-profile-summary")
+                    } catch (e: Exception) {
+                        log.info("Client ${clients.indexOf(it.client)} is rate-limited")
+                    }
+                }
                 repoServices.forEach { log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}") }
             }
         }, 0, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES))
