@@ -37,7 +37,6 @@ object UserCtrl {
                     repoCommitCountDescriptions,
                     repoStarCountDescriptions
             ))
-            System.gc()
         }
         return Cache.getUserProfile(username.toLowerCase())!!
     }
