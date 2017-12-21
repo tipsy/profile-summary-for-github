@@ -7,10 +7,10 @@ import java.util.concurrent.TimeUnit
 object Cache {
 
     private const val path = "cache/userinfo"
-    private val userProfiles = readUserProfilesFromDisk()
 
     // Put userProfile in cache, then serialize cache and write it to disk
     fun putUserProfile(userProfile: UserProfile) {
+        val userProfiles = readUserProfilesFromDisk()
         userProfiles[userProfile.user.login.toLowerCase()] = userProfile
         val byteArrayOutputStream = ByteArrayOutputStream()
         ObjectOutputStream(byteArrayOutputStream).writeObject(userProfiles)
@@ -23,9 +23,9 @@ object Cache {
         }
     }
 
-    fun getUserProfile(username: String) = userProfiles[username.toLowerCase()]
-    fun contains(username: String) = userProfiles[username.toLowerCase()] != null
-    fun invalid(username: String) = Date().time - (userProfiles[username.toLowerCase()]?.timeStamp ?: 0) > TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
+    fun getUserProfile(username: String) = readUserProfilesFromDisk()[username.toLowerCase()]
+    fun contains(username: String) = readUserProfilesFromDisk()[username.toLowerCase()] != null
+    fun invalid(username: String) = Date().time - (readUserProfilesFromDisk()[username.toLowerCase()]?.timeStamp ?: 0) > TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
 
     // Read cache from disk, return empty map if no cache file exists
     @Suppress("UNCHECKED_CAST")
