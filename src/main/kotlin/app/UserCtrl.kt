@@ -45,6 +45,9 @@ object UserCtrl {
         if (Cache.contains(username)) {
             return true
         }
+        if (GhService.remainingRequests == 0) {
+            return false;
+        }
         return try {
             GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("github-profile-summary")
         } catch (e: Exception) {
