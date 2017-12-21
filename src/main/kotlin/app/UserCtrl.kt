@@ -42,9 +42,6 @@ object UserCtrl {
     }
 
     fun hasStarredRepo(username: String): Boolean {
-        if (username.isEmpty()) {
-            return false
-        }
         if (Cache.contains(username)) {
             return true
         }
