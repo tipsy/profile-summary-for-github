@@ -145,7 +145,7 @@
                     <appName>github-profile-summary</appName>
                     <processTypes>
                         <!-- Tell Heroku how to launch your application -->
-                        <web>java -jar ./target/github-profile-summary-1.0-jar-with-dependencies.jar</web>
+                        <web>java -jar -Xmx224M ./target/github-profile-summary-1.0-jar-with-dependencies.jar</web>
                     </processTypes>
                 </configuration>
             </plugin>
