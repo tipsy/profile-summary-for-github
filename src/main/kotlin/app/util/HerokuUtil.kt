@@ -13,7 +13,8 @@ object HerokuUtil {
     fun enableSslRedirect(app: Javalin) {
         app.before { ctx ->
             if (ctx.header("x-forwarded-proto") == "http") {
-                ctx.redirect("https://${ctx.header("host")}${ctx.path()}", 301)
+                val queryString = if (ctx.queryString() != null) "?" + ctx.queryString() else ""
+                ctx.redirect("https://${ctx.header("host")}${ctx.path()}$queryString", 301)
             }
         }
     }
