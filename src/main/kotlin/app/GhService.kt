@@ -36,11 +36,11 @@ object GhService {
                 repoServices.forEach {
                     try {
                         it.getRepository("tipsy", "github-profile-summary")
+                        log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}")
                     } catch (e: Exception) {
-                        log.info("Client ${clients.indexOf(it.client)} is rate-limited")
+                        log.info("Pinged client ${clients.indexOf(it.client)} - was rate-limited")
                     }
                 }
-                repoServices.forEach { log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}") }
             }
         }, 0, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES))
     }
