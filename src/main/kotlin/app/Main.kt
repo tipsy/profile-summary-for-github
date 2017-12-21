@@ -4,9 +4,12 @@ import app.util.HerokuUtil
 import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.core.util.Header
+import io.javalin.embeddedserver.jetty.EmbeddedJettyFactory
 import io.javalin.translator.template.TemplateUtil.model
 import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.eclipse.egit.github.core.client.RequestException
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.slf4j.LoggerFactory
 import java.util.*
 
@@ -20,6 +23,9 @@ fun main(args: Array<String>) {
         port(Config.getPort() ?: 7070)
         enableStandardRequestLogging()
         enableDynamicGzip()
+        embeddedServer(EmbeddedJettyFactory {
+            Server(QueuedThreadPool(200, 8, 120000))
+        })
     }
 
     // add routes
