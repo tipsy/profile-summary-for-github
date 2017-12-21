@@ -72,7 +72,7 @@ fun main(args: Array<String>) {
         }
 
         error(404) { ctx ->
-            if (ctx.header(Header.ACCEPT)?.contains("application/json") == false) {
+            if (ctx.header(Header.ACCEPT)?.contains("application/json") == false || !ctx.response().isCommitted) {
                 ctx.redirect("/search")
             }
         }
