@@ -24,7 +24,7 @@
                 <h2>Repos per Language</h2>
                 <canvas id="langRepoCount"></canvas>
             </div>
-            <div v-if="Object.keys(data.langStarCount).length > 0" class="chart-container chart-container--third">
+            <div v-if="Math.max(...Object.values(data.repoStarCount)) > 0" class="chart-container chart-container--third">
                 <h2>Stars per Language</h2>
                 <canvas id="langStarCount"></canvas>
             </div>
