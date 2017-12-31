@@ -9,6 +9,7 @@ import io.javalin.translator.template.TemplateUtil.model
 import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.eclipse.egit.github.core.client.RequestException
 import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -20,11 +21,15 @@ fun main(args: Array<String>) {
     val unrestricted = Config.getUnrestrictedState()?.toBoolean() ?: false
 
     val app = Javalin.create().apply {
-        port(Config.getPort() ?: 7070)
         enableStandardRequestLogging()
         enableDynamicGzip()
         embeddedServer(EmbeddedJettyFactory {
-            Server(QueuedThreadPool(200, 8, 120000))
+            Server(QueuedThreadPool(200, 8, 120000)).apply {
+                connectors = arrayOf(ServerConnector(server).apply {
+                    port = Config.getPort() ?: 7070
+                    idleTimeout = 120_000
+                })
+            }
         })
     }
 
