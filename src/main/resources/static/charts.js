@@ -37,10 +37,12 @@ function donutChart(objectName, data) {
         options: {
             animation: false,
             rotation: (-0.40 * Math.PI),
-            legend: {
-                position: "left",
+            legend: { // todo: fix duplication ?
+                position: window.innerWidth < 600 ? "bottom" : "left",
                 labels: {
-                    boxWidth: 12
+                    fontSize: window.innerWidth < 600 ? 10 : 12,
+                    padding: window.innerWidth < 600 ? 8 : 10,
+                    boxWidth: window.innerWidth < 600 ? 10 : 12
                 }
             },
             tooltips: {
@@ -65,6 +67,12 @@ function donutChart(objectName, data) {
                     }
                 } catch (ignored) {
                 }
+            },
+            onResize: function (instance) { // todo: fix duplication ?
+                instance.chart.options.legend.position = window.innerWidth < 600 ? "bottom" : "left";
+                instance.chart.options.legend.labels.fontSize = window.innerWidth < 600 ? 10 : 12;
+                instance.chart.options.legend.labels.padding = window.innerWidth < 600 ? 8 : 10;
+                instance.chart.options.legend.labels.boxWidth = window.innerWidth < 600 ? 10 : 12;
             }
         }
     });
