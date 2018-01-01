@@ -1,13 +1,14 @@
 package app
 
 import java.io.*
-import java.time.Duration
 import java.time.Instant
+import java.util.concurrent.TimeUnit
 
 object Cache {
 
     private const val path = "cache/userinfo"
     private val userProfiles = readUserProfilesFromDisk()
+    private val millisPerDay = TimeUnit.DAYS.toMillis(1)
 
     // Put userProfile in cache, then serialize cache and write it to disk
     fun putUserProfile(userProfile: UserProfile) {
@@ -23,11 +24,12 @@ object Cache {
         }
     }
 
+
     fun getUserProfile(username: String) = userProfiles[username.toLowerCase()]
     fun contains(username: String) = userProfiles[username.toLowerCase()] != null
     fun invalid(username: String): Boolean = userProfiles[username.toLowerCase()]?.timeStamp
             ?.let {
-                Duration.between(Instant.ofEpochMilli(it), Instant.now()).minusDays(1).nano > 0
+                Instant.now().toEpochMilli() - it > millisPerDay
             } != false
 
     // Read cache from disk, return empty map if no cache file exists
