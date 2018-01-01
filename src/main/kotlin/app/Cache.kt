@@ -8,7 +8,7 @@ object Cache {
 
     private const val path = "cache/userinfo"
     private val userProfiles = readUserProfilesFromDisk()
-    private val millisPerDay = TimeUnit.DAYS.toMillis(1)
+    private val millisCacheValid = TimeUnit.HOURS.toMillis(6)
 
     // Put userProfile in cache, then serialize cache and write it to disk
     fun putUserProfile(userProfile: UserProfile) {
@@ -28,7 +28,7 @@ object Cache {
     fun contains(username: String) = userProfiles[username.toLowerCase()] != null
     fun invalid(username: String): Boolean = userProfiles[username.toLowerCase()]?.timeStamp
             ?.let {
-                Instant.now().toEpochMilli() - it > millisPerDay
+                Instant.now().toEpochMilli() - it > millisCacheValid
             } != false
 
     // Read cache from disk, return empty map if no cache file exists
