@@ -4,6 +4,7 @@ import org.eclipse.egit.github.core.Repository
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
 import java.io.Serializable
+import java.time.Instant
 import java.util.*
 import kotlin.streams.toList
 
@@ -46,7 +47,7 @@ object UserCtrl {
             return true
         }
         if (GhService.remainingRequests == 0) {
-            return false;
+            return false
         }
         return try {
             GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("github-profile-summary")
@@ -62,8 +63,9 @@ object UserCtrl {
     }
 
     private fun getYearAndQuarter(it: RepositoryCommit): String {
-        val date = it.commit.committer.date
-        return "${(1900 + date.year)}-Q${date.month / 3 + 1}"
+        val cal = Calendar.getInstance()
+        cal.time = it.commit.committer.date
+        return "${cal.get(Calendar.YEAR)}-Q${cal.get(Calendar.MONTH) / 3 + 1}"
     }
 
 }
@@ -79,5 +81,5 @@ data class UserProfile(
         val repoCommitCountDescriptions: Map<String, String?>,
         val repoStarCountDescriptions: Map<String, String?>
 ) : Serializable {
-    val timeStamp = Date().time
+    val timeStamp = Instant.now().toEpochMilli()
 }
