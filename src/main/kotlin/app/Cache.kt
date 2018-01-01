@@ -1,8 +1,8 @@
 package app
 
 import java.io.*
-import java.util.*
-import java.util.concurrent.TimeUnit
+import java.time.Duration
+import java.time.Instant
 
 object Cache {
 
@@ -25,7 +25,10 @@ object Cache {
 
     fun getUserProfile(username: String) = userProfiles[username.toLowerCase()]
     fun contains(username: String) = userProfiles[username.toLowerCase()] != null
-    fun invalid(username: String) = Date().time - (userProfiles[username.toLowerCase()]?.timeStamp ?: 0) > TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)
+    fun invalid(username: String): Boolean = userProfiles[username.toLowerCase()]?.timeStamp
+            ?.let {
+                Duration.between(Instant.ofEpochMilli(it), Instant.now()).minusDays(1).nano > 0
+            } != false
 
     // Read cache from disk, return empty map if no cache file exists
     @Suppress("UNCHECKED_CAST")
