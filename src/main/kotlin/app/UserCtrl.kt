@@ -5,7 +5,9 @@ import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
 import java.io.Serializable
 import java.time.Instant
-import java.util.*
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.temporal.IsoFields
 import kotlin.streams.toList
 
 object UserCtrl {
@@ -63,9 +65,8 @@ object UserCtrl {
     }
 
     private fun getYearAndQuarter(it: RepositoryCommit): String {
-        val cal = Calendar.getInstance()
-        cal.time = it.commit.committer.date
-        return "${cal.get(Calendar.YEAR)}-Q${cal.get(Calendar.MONTH) / 3 + 1}"
+        val date = LocalDateTime.ofInstant(it.commit.committer.date.toInstant(), ZoneOffset.UTC)
+        return "${date.year}-Q${date.get(IsoFields.QUARTER_OF_YEAR)}"
     }
 
 }
