@@ -65,7 +65,7 @@ object UserCtrl {
     }
 
     private fun getYearAndQuarter(it: RepositoryCommit): String {
-        val date = LocalDateTime.ofInstant(it.commit.committer.date.toInstant(), ZoneOffset.UTC)
+        val date = it.commit.committer.date.toInstant().atOffset(ZoneOffset.UTC)
         return "${date.year}-Q${date.get(IsoFields.QUARTER_OF_YEAR)}"
     }
 
