@@ -24,7 +24,6 @@ object Cache {
         }
     }
 
-
     fun getUserProfile(username: String) = userProfiles[username.toLowerCase()]
     fun contains(username: String) = userProfiles[username.toLowerCase()] != null
     fun invalid(username: String): Boolean = userProfiles[username.toLowerCase()]?.timeStamp
