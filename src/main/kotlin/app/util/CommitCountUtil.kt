@@ -12,7 +12,7 @@ import java.util.*
 object CommitCountUtil {
 
     fun getCommitsForQuarters(user: User, repoCommits: Map<Repository, List<RepositoryCommit>>): Map<String, Int> {
-        val quarterBuckets = (0..MONTHS.between(asInstant(user.createdAt), asInstant(Date()))).associate { monthNr ->
+        val quarterBuckets = (0..MONTHS.between(asInstant(user.createdAt), asInstant(Date()).plusMonths(1))).associate { monthNr ->
             yearQuarterFromDate(asInstant(user.createdAt).plusMonths(monthNr)) to 0
         }.toMutableMap()
         repoCommits.flatMap { it.value }.forEach {
