@@ -44,12 +44,9 @@ object GhService {
         }, 0, 2, TimeUnit.MINUTES)
     }
 
-    fun broadcastRemainingRequests(session: WsSession) = object : TimerTask() {
-        override fun run() {
-            if (session.isOpen) {
-                return session.send(GhService.remainingRequests.toString())
-            }
-            this.cancel()
+    fun broadcastRemainingRequests(session: WsSession) = Runnable {
+        if (session.isOpen) {
+            session.send(GhService.remainingRequests.toString())
         }
     }
 
