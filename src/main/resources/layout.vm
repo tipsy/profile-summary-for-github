@@ -24,7 +24,9 @@
         <link rel="shortcut icon" href="#include("/static/favicon.base64")">
     </head>
     <body data-user-id="$user">
-        #include("/static/gtm.html")
+        #if($tracking)
+            #include("/static/gtm.html")
+        #end
         <main class="content">
             $bodyContent
         </main>
