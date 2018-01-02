@@ -2,13 +2,12 @@ package app
 
 import java.io.*
 import java.time.Instant
-import java.util.concurrent.TimeUnit
+import java.time.temporal.ChronoUnit.HOURS
 
 object Cache {
 
     private const val path = "cache/userinfo"
     private val userProfiles = readUserProfilesFromDisk()
-    private val millisCacheValid = TimeUnit.HOURS.toMillis(6)
 
     // Put userProfile in cache, then serialize cache and write it to disk
     fun putUserProfile(userProfile: UserProfile) {
@@ -26,10 +25,9 @@ object Cache {
 
     fun getUserProfile(username: String) = userProfiles[username.toLowerCase()]
     fun contains(username: String) = getUserProfile(username) != null
-    fun invalid(username: String): Boolean = getUserProfile(username)?.timeStamp
-            ?.let {
-                Instant.now().toEpochMilli() - it > millisCacheValid
-            } != false
+    fun invalid(username: String): Boolean = getUserProfile(username)?.let {
+        HOURS.between(Instant.ofEpochMilli(it.timeStamp), Instant.now()) > 6
+    } ?: true
 
     // Read cache from disk, return empty map if no cache file exists
     @Suppress("UNCHECKED_CAST")
