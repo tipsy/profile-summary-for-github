@@ -7,7 +7,6 @@ import org.eclipse.egit.github.core.service.RepositoryService
 import org.eclipse.egit.github.core.service.UserService
 import org.eclipse.egit.github.core.service.WatcherService
 import org.slf4j.LoggerFactory
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
