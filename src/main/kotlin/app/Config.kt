@@ -14,6 +14,6 @@ object Config {
     fun getUnrestrictedState(): String? = ProcessBuilder().environment()["UNRESTRICTED"] ?: System.getProperty("unrestricted")
 
     // get 'tracking' state from Heroku/System, or return null if not set
-    fun getTrackingState(): String? = (ProcessBuilder().environment()["TRACKING"] ?: System.getProperty("tracking"))
+    fun getTrackingState(): String? = ProcessBuilder().environment()["TRACKING"] ?: System.getProperty("tracking")
 
 }
