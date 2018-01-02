@@ -5,7 +5,6 @@ import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
 import java.io.Serializable
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.IsoFields
 import kotlin.streams.toList
