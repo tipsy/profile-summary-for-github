@@ -25,8 +25,8 @@ object Cache {
     }
 
     fun getUserProfile(username: String) = userProfiles[username.toLowerCase()]
-    fun contains(username: String) = userProfiles[username.toLowerCase()] != null
-    fun invalid(username: String): Boolean = userProfiles[username.toLowerCase()]?.timeStamp
+    fun contains(username: String) = getUserProfile(username) != null
+    fun invalid(username: String): Boolean = getUserProfile(username)?.timeStamp
             ?.let {
                 Instant.now().toEpochMilli() - it > millisCacheValid
             } != false

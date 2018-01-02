@@ -41,7 +41,7 @@ object UserCtrl {
                     repoStarCountDescriptions
             ))
         }
-        return Cache.getUserProfile(username.toLowerCase())!!
+        return Cache.getUserProfile(username)!!
     }
 
     fun hasStarredRepo(username: String): Boolean {
