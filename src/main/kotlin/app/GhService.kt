@@ -8,6 +8,7 @@ import org.eclipse.egit.github.core.service.UserService
 import org.eclipse.egit.github.core.service.WatcherService
 import org.slf4j.LoggerFactory
 import java.util.*
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 object GhService {
@@ -31,18 +32,16 @@ object GhService {
     val remainingRequests: Int get() = clients.sumBy { it.remainingRequests }
 
     init { // create timer to ping clients every other minute to make sure remainingRequests is correct
-        Timer().scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                repoServices.forEach {
-                    try {
-                        it.getRepository("tipsy", "github-profile-summary")
-                        log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}")
-                    } catch (e: Exception) {
-                        log.info("Pinged client ${clients.indexOf(it.client)} - was rate-limited")
-                    }
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate({
+            repoServices.forEach {
+                try {
+                    it.getRepository("tipsy", "github-profile-summary")
+                    log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}")
+                } catch (e: Exception) {
+                    log.info("Pinged client ${clients.indexOf(it.client)} - was rate-limited")
                 }
             }
-        }, 0, TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES))
+        }, 0, 2, TimeUnit.MINUTES)
     }
 
     fun broadcastRemainingRequests(session: WsSession) = object : TimerTask() {
