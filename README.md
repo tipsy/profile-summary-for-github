@@ -27,7 +27,7 @@ You can build a profile summary for any GitHub profile using `-Dunrestricted=tru
 
 You can enable Google Analytics on your instance by setting `gtm-id`:
 
-* `java -Dgtm-id=GTM-W4XBCK -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
+* `java -Dgtm-id=GTM-XXXXXX -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
 
 ## run locally with docker
 
