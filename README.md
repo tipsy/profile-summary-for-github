@@ -25,6 +25,10 @@ You can build a profile summary for any GitHub profile using `-Dunrestricted=tru
 
 * `java -Dunrestricted=true -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
 
+You can enable Google Tag Manager on your instance by setting `gtm-id`:
+
+* `java -Dgtm-id=GTM-XXXXXX -jar target/github-profile-summary-1.0-jar-with-dependencies.jar`
+
 ## run locally with docker
 
 * `git clone https://github.com/tipsy/github-profile-summary.git`

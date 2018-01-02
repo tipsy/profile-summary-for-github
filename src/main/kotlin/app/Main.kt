@@ -18,7 +18,8 @@ fun main(args: Array<String>) {
 
     val log = LoggerFactory.getLogger("app.MainKt")
 
-    val unrestricted = Config.getUnrestrictedState()?.toBoolean() ?: false
+    val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
+    val gtmId = Config.getGtmId() ?: ""
 
     val app = Javalin.create().apply {
         enableStandardRequestLogging()
@@ -47,7 +48,7 @@ fun main(args: Array<String>) {
         get("/user/:user") { ctx ->
             val user = ctx.param("user")!!
             when (UserCtrl.hasStarredRepo(user) || unrestricted) {
-                true -> ctx.renderVelocity("user.vm", model("user", user))
+                true -> ctx.renderVelocity("user.vm", model("user", user, "gtmId", gtmId))
                 false -> ctx.redirect("/search?q=$user")
             }
         }
@@ -56,7 +57,7 @@ fun main(args: Array<String>) {
             val user = ctx.queryParam("q")?.trim() ?: ""
             when (UserCtrl.hasStarredRepo(user) || (unrestricted && user != "")) {
                 true -> ctx.redirect("/user/$user")
-                false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user)))
+                false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user), "gtmId", gtmId))
             }
         }
 

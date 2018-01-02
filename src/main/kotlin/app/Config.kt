@@ -13,4 +13,7 @@ object Config {
     // Get 'unrestricted' state from Heroku/System, or return null if not set
     fun getUnrestrictedState(): String? = ProcessBuilder().environment()["UNRESTRICTED"] ?: System.getProperty("unrestricted")
 
+    // Get 'gtm-id' from Heroku/System, or return null if not set
+    fun getGtmId(): String? = ProcessBuilder().environment()["GTM_ID"] ?: System.getProperty("gtm-id")
+
 }
