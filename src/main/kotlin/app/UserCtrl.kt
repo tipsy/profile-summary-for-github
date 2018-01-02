@@ -1,12 +1,11 @@
 package app
 
+import app.util.CommitCountUtil
 import org.eclipse.egit.github.core.Repository
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
 import java.io.Serializable
 import java.time.Instant
-import java.time.ZoneOffset
-import java.time.temporal.IsoFields
 import kotlin.streams.toList
 
 object UserCtrl {
@@ -18,7 +17,7 @@ object UserCtrl {
             val repoCommits = repos.parallelStream().map { it to commitsForRepo(it).filter { it.author?.login.equals(username, ignoreCase = true) } }.toList().toMap()
             val langRepoGrouping = repos.groupingBy { (it.language ?: "Unknown") }
 
-            val quarterCommitCount = repoCommits.flatMap { it.value }.groupingBy { getYearAndQuarter(it) }.fold(0) { acc, _ -> acc + 1 }.toSortedMap()
+            val quarterCommitCount = CommitCountUtil.getCommitsForQuarters(user, repoCommits)
             val langRepoCount = langRepoGrouping.eachCount().toList().sortedBy { (_, v) -> -v }.toMap()
             val langStarCount = langRepoGrouping.fold(0) { acc, repo -> acc + repo.watchers }.toList().sortedBy { (_, v) -> -v }.toMap()
             val langCommitCount = langRepoGrouping.fold(0) { acc, repo -> acc + repoCommits[repo]!!.size }.toList().sortedBy { (_, v) -> -v }.toMap()
@@ -61,11 +60,6 @@ object UserCtrl {
         GhService.commits.getCommits(repo)
     } catch (e: Exception) {
         listOf()
-    }
-
-    private fun getYearAndQuarter(it: RepositoryCommit): String {
-        val date = it.commit.committer.date.toInstant().atOffset(ZoneOffset.UTC)
-        return "${date.year}-Q${date.get(IsoFields.QUARTER_OF_YEAR)}"
     }
 
 }
