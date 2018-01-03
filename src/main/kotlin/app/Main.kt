@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
     val log = LoggerFactory.getLogger("app.MainKt")
 
     val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
-    val gtmId = Config.getGtmId() ?: ""
+    val gtmId = Config.getGtmId()
 
     val app = Javalin.create().apply {
         enableStandardRequestLogging()
