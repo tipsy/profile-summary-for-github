@@ -17,9 +17,8 @@ object CommitCountUtil {
     fun getCommitsForQuarters(user: User, repoCommits: Map<Repository, List<RepositoryCommit>>): SortedMap<String, Int> {
         val creation = asInstant(user.createdAt).withDayOfMonth(1)
         val now = Instant.now().atOffset(UTC).with(TemporalAdjusters.firstDayOfNextMonth())
-        val quarters = QUARTER_YEARS.between(creation, now)
 
-        val quarterBuckets = (0..quarters)
+        val quarterBuckets = (0..QUARTER_YEARS.between(creation, now))
                 .associate { yearQuarterFromDate(creation.plus(it, QUARTER_YEARS)) to 0 }
                 .toSortedMap()
 
