@@ -3,26 +3,33 @@ package app.util
 import org.eclipse.egit.github.core.Repository
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
+import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit.MONTHS
+import java.time.ZoneOffset.UTC
 import java.time.temporal.IsoFields
+import java.time.temporal.IsoFields.QUARTER_YEARS
+import java.time.temporal.TemporalAdjusters
 import java.util.*
 
 object CommitCountUtil {
 
-    fun getCommitsForQuarters(user: User, repoCommits: Map<Repository, List<RepositoryCommit>>): Map<String, Int> {
-        val quarterBuckets = (0..MONTHS.between(asInstant(user.createdAt), asInstant(Date()).plusMonths(1))).associate { monthNr ->
-            yearQuarterFromDate(asInstant(user.createdAt).plusMonths(monthNr)) to 0
-        }.toSortedMap()
-        repoCommits.flatMap { it.value }.forEach {
-            quarterBuckets[yearQuarterFromCommit(it)] = (quarterBuckets[yearQuarterFromCommit(it)] ?: 0) + 1
-        }
+    fun getCommitsForQuarters(user: User, repoCommits: Map<Repository, List<RepositoryCommit>>): SortedMap<String, Int> {
+        val creation = asInstant(user.createdAt).withDayOfMonth(1)
+        val now = Instant.now().atOffset(UTC).with(TemporalAdjusters.firstDayOfNextMonth())
+        val quarters = QUARTER_YEARS.between(creation, now)
+
+        val quarterBuckets = (0..quarters)
+                .associate { yearQuarterFromDate(creation.plus(it, QUARTER_YEARS)) to 0 }
+                .toSortedMap()
+
+        repoCommits.values.flatten().groupingBy { yearQuarterFromCommit(it) }.eachCountTo(quarterBuckets)
+
         return quarterBuckets
     }
 
     private fun asInstant(date: Date) = date.toInstant().atOffset(ZoneOffset.UTC)
-    private fun yearQuarterFromCommit(it: RepositoryCommit) = yearQuarterFromDate(it.commit.committer.date.toInstant().atOffset(ZoneOffset.UTC))
+    private fun yearQuarterFromCommit(it: RepositoryCommit) = yearQuarterFromDate(asInstant(it.commit.committer.date))
     private fun yearQuarterFromDate(date: OffsetDateTime) = "${date.year}-Q${date.get(IsoFields.QUARTER_OF_YEAR)}"
 
 }
