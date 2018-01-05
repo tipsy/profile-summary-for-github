@@ -2,10 +2,10 @@ package app
 
 import app.util.HerokuUtil
 import app.util.RateLimitUtil
-import app.util.SocketBroadcastManager
 import io.javalin.Javalin
 import io.javalin.core.util.Header
 import io.javalin.embeddedserver.jetty.EmbeddedJettyFactory
+import io.javalin.embeddedserver.jetty.websocket.WsSession
 import io.javalin.translator.template.TemplateUtil.model
 import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.eclipse.egit.github.core.client.RequestException
@@ -13,6 +13,10 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.slf4j.LoggerFactory
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Future
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
 
@@ -61,13 +65,23 @@ fun main(args: Array<String>) {
             }
         }
 
+        // Keep track of the rate limit broadcast actions associated with each socket to easily cancel on close
+        val sessions = ConcurrentHashMap<WsSession, Future<*>>()
+
+        // Directly construct this scheduled thread pool executor for setRemoveOnCancelPolicy(boolean) access
+        // so that cancelled broadcast actions for closed sockets can be cleaned up more quickly
+        // since java.util.concurrent.Executors returns too generic executors to do this call without reflection
+        val exec = ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors())
+        exec.removeOnCancelPolicy = true
+
         ws("/rate-limit-status") { ws ->
             ws.onConnect {
-                SocketBroadcastManager.registerSocket(it)
+                val future = exec.scheduleAtFixedRate(GhService.broadcastRemainingRequests(it), 0, 1, TimeUnit.SECONDS)
+                sessions.put(it, future)
             }
 
             ws.onClose { session, _, _ ->
-                SocketBroadcastManager.unregisterSocket(session)
+                sessions.remove(session)?.cancel(true)
             }
         }
 
