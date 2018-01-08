@@ -38,30 +38,26 @@ object GhService {
 
     fun unregisterClient(ws: WsSession) = clientSessions.remove(ws) == true
 
-    private fun pingGhClients() = Runnable {
-        repoServices.forEach {
-            try {
-                it.getRepository("tipsy", "github-profile-summary")
-                log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}")
-            } catch (e: Exception) {
-                log.info("Pinged client ${clients.indexOf(it.client)} - was rate-limited")
-            }
-        }
-    }
-
-    private fun pingWsClients() = Runnable {
-        val payload = remainingRequests.toString()
-        clientSessions.forEachKey(1) { if (it.isOpen) it.send(payload) }
-    }
-
     init {
         Executors.newScheduledThreadPool(2).apply {
 
             // ping clients every other minute to make sure remainingRequests is correct
-            scheduleAtFixedRate(pingGhClients(), 0, 2, TimeUnit.MINUTES)
+            scheduleAtFixedRate({
+                repoServices.forEach {
+                    try {
+                        it.getRepository("tipsy", "github-profile-summary")
+                        log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}")
+                    } catch (e: Exception) {
+                        log.info("Pinged client ${clients.indexOf(it.client)} - was rate-limited")
+                    }
+                }
+            }, 0, 2, TimeUnit.MINUTES)
 
             // update all connected clients with remainingRequests twice per second
-            scheduleAtFixedRate(pingWsClients(), 0, 500, TimeUnit.MILLISECONDS)
+            scheduleAtFixedRate({
+                val payload = remainingRequests.toString()
+                clientSessions.forEachKey(1) { if (it.isOpen) it.send(payload) }
+            }, 0, 500, TimeUnit.MILLISECONDS)
 
         }
     }
