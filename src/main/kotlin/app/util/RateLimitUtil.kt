@@ -1,8 +1,9 @@
 package app.util
 
 import io.javalin.Javalin
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 /**
  * A very naive IP-based rate-limiting mechanism
@@ -21,30 +22,28 @@ object RateLimitUtil {
     fun enableTerribleRateLimiting(app: Javalin) {
 
         app.before { ctx ->
-            if (ipReqCount[ctx.ip()] ?: 0 > 25) {
-                throw TerribleRateLimitException()
-            }
-            ipReqCount[ctx.ip()] = (ipReqCount[ctx.ip()] ?: 0) + 1
+            ipReqCount.compute(ctx.ip(), { _, count ->
+                when (count) {
+                    null -> 1
+                    in 0..25 -> count + 1
+                    else -> throw TerribleRateLimitException()
+                }
+            })
         }
 
-        app.exception(TerribleRateLimitException::class.java) { e, ctx ->
+        app.exception(TerribleRateLimitException::class.java) { _, ctx ->
             ctx.result("You can't spam this much. I'll give you a new request every five seconds.")
         }
 
-        Timer().scheduleAtFixedRate(decrementAllCounters(), 0, 5000) // every 5s
+        Executors.newSingleThreadScheduledExecutor()
+                .scheduleAtFixedRate(decrementAllCounters, 0, 5, TimeUnit.SECONDS)
 
     }
 
-    private fun decrementAllCounters() = object : TimerTask() {
-        override fun run() {
-            ipReqCount.forEach { ip, count ->
-                if (count > 0) {
-                    ipReqCount[ip] = ipReqCount[ip]!! - 1
-                } else {
-                    ipReqCount.remove(ip)
-                }
-            }
-        }
+    private val decrementAllCounters = Runnable {
+        ipReqCount.forEachKey(1, { ip ->
+            ipReqCount.computeIfPresent(ip, { _, count -> if (count > 1) count - 1 else null })
+        })
     }
 
 }
