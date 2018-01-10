@@ -53,10 +53,10 @@ object GhService {
 
             // update all connected clients with remainingRequests twice per second
             scheduleAtFixedRate({
-                val payload = remainingRequests.toString()
+                val remainingRequests = remainingRequests.toString()
                 clientSessions.forEachKey(1) {
                     try {
-                        it.send(payload)
+                        it.send(remainingRequests)
                     } catch (e: Exception) {
                         log.error(e.toString())
                     }
