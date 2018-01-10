@@ -18,9 +18,6 @@ object GhService {
 
     private val log = LoggerFactory.getLogger(GhService.javaClass)
 
-    // Allows for parallel iteration and O(1) put/remove
-    private val clientSessions = ConcurrentHashMap<WsSession, Boolean>()
-
     private val tokens = Config.getApiTokens()?.split(",") ?: listOf("") // empty token is limited to 60 requests
     private val clients = tokens.map { GitHubClient().apply { setOAuth2Token(it) } }
     private val repoServices = clients.map { RepositoryService(it) }
@@ -35,8 +32,9 @@ object GhService {
 
     val remainingRequests: Int get() = clients.sumBy { it.remainingRequests }
 
+    // Allows for parallel iteration and O(1) put/remove
+    private val clientSessions = ConcurrentHashMap<WsSession, Boolean>()
     fun registerClient(ws: WsSession) = clientSessions.put(ws, true) == true
-
     fun unregisterClient(ws: WsSession) = clientSessions.remove(ws) == true
 
     init {
@@ -56,13 +54,11 @@ object GhService {
 
             // update all connected clients with remainingRequests twice per second
             scheduleAtFixedRate({
-                val payload = remainingRequests.toString()
                 clientSessions.forEachKey(1) {
                     try {
-                        if (it.isOpen)
-                            it.send(payload)
-                    } catch (e: IOException) {
-                        log?.error(e.toString())
+                        it.send(remainingRequests.toString())
+                    } catch (e: Exception) {
+                        log.error(e.toString())
                     }
                 }
             }, 0, 500, TimeUnit.MILLISECONDS)
