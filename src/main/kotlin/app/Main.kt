@@ -12,7 +12,6 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.slf4j.LoggerFactory
-import java.util.*
 
 fun main(args: Array<String>) {
 
@@ -62,9 +61,9 @@ fun main(args: Array<String>) {
         }
 
         ws("/rate-limit-status") { ws ->
-            ws.onConnect { session ->
-                Timer().scheduleAtFixedRate(GhService.broadcastRemainingRequests(session), 0, 1000)
-            }
+            ws.onConnect { GhService.registerClient(it) }
+            ws.onClose { session, _, _ -> GhService.unregisterClient(session) }
+            ws.onError { session, _ -> GhService.unregisterClient(session) }
         }
 
     }
