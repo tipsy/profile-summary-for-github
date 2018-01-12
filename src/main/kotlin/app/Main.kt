@@ -38,7 +38,7 @@ fun main(args: Array<String>) {
 
         get("/api/user/:user") { ctx ->
             val user = ctx.param("user")!!
-            when (unrestricted || UserCtrl.hasStarredRepo(user)) {
+            when (UserCtrl.hasStarredRepo(user) || unrestricted) {
                 true -> ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
                 false -> ctx.status(400)
             }
@@ -46,7 +46,7 @@ fun main(args: Array<String>) {
 
         get("/user/:user") { ctx ->
             val user = ctx.param("user")!!
-            when (unrestricted || UserCtrl.hasStarredRepo(user)) {
+            when (UserCtrl.hasStarredRepo(user) || unrestricted) {
                 true -> ctx.renderVelocity("user.vm", model("user", user, "gtmId", gtmId))
                 false -> ctx.redirect("/search?q=$user")
             }
@@ -54,7 +54,7 @@ fun main(args: Array<String>) {
 
         get("/search") { ctx ->
             val user = ctx.queryParam("q")?.trim() ?: ""
-            when ((unrestricted && user != "") || UserCtrl.hasStarredRepo(user)) {
+            when (UserCtrl.hasStarredRepo(user) || (unrestricted && user != "")) {
                 true -> ctx.redirect("/user/$user")
                 false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user), "gtmId", gtmId))
             }
