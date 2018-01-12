@@ -7,6 +7,7 @@ import org.eclipse.egit.github.core.service.RepositoryService
 import org.eclipse.egit.github.core.service.UserService
 import org.eclipse.egit.github.core.service.WatcherService
 import org.slf4j.LoggerFactory
+import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -53,10 +54,9 @@ object GhService {
 
             // update all connected clients with remainingRequests twice per second
             scheduleAtFixedRate({
-                val remainingRequests = remainingRequests.toString()
                 clientSessions.forEachKey(1) {
                     try {
-                        it.send(remainingRequests)
+                        it.send(remainingRequests.toString())
                     } catch (e: Exception) {
                         log.error(e.toString())
                     }
