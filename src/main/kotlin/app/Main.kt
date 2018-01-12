@@ -61,7 +61,7 @@ fun main(args: Array<String>) {
         }
 
         ws("/rate-limit-status") { ws ->
-            ws.onConnect { session -> GhService.registerClient(session) }
+            ws.onConnect { GhService.registerClient(it) }
             ws.onClose { session, _, _ -> GhService.unregisterClient(session) }
             ws.onError { session, _ -> GhService.unregisterClient(session) }
         }
