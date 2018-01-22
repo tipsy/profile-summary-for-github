@@ -78,18 +78,14 @@ function donutChart(objectName, data) {
     });
 
     function createColorArray(length) {
-        let array = [];
-        while (array.length < length) {
-            array = array.concat([
-                "#54ca76",
-                "#f5c452",
-                "#f2637f",
-                "#9261f3",
-                "#31a4e6",
-                "#55cbcb",
-            ]);
-        }
-        return array;
+        const colors = ["#54ca76", "#f5c452", "#f2637f", "#9261f3", "#31a4e6", "#55cbcb"];
+        let arr = Array.from(Array(length), (_, i) => colors[i % colors.length]);
+
+        // Edge case: avoid repetition where first and last colors are the same
+        if (length % colors.length === 1)
+            arr[length - 1] = colors[1];
+
+        return arr;
     }
 
     function arrayRotate(arr, n) {
@@ -152,4 +148,3 @@ function lineChart(objectName, data) {
         }
     });
 }
-
