@@ -78,17 +78,22 @@ function donutChart(objectName, data) {
     });
 
     function createColorArray(length) {
-        let array = [];
-        while (array.length < length) {
-            array = array.concat([
-                "#54ca76",
-                "#f5c452",
-                "#f2637f",
-                "#9261f3",
-                "#31a4e6",
-                "#55cbcb",
-            ]);
-        }
+
+        const colors = [
+            "#54ca76",
+            "#f5c452",
+            "#f2637f",
+            "#9261f3",
+            "#31a4e6",
+            "#55cbcb"
+        ];
+
+        let array = [...Array(length).keys()].map(i => colors[i % colors.length]);
+
+        // avoid first and last colors being the same
+        if (length % colors.length === 1)
+            array[length - 1] = colors[1];
+
         return array;
     }
 
