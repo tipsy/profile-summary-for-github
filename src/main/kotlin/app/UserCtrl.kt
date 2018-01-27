@@ -21,6 +21,7 @@ object UserCtrl {
             val langRepoCount = langRepoGrouping.eachCount().toList().sortedBy { (_, v) -> -v }.toMap()
             val langStarCount = langRepoGrouping.fold(0) { acc, repo -> acc + repo.watchers }.toList().sortedBy { (_, v) -> -v }.toMap()
             val langCommitCount = langRepoGrouping.fold(0) { acc, repo -> acc + repoCommits[repo]!!.size }.toList().sortedBy { (_, v) -> -v }.toMap()
+            val langColors = repos.filter({ it.language != null }).associateBy({ it.language }, { GhService.getLangColor(it.language) })
             val repoCommitCount = repoCommits.map { it.key.name to it.value.size }.toList().sortedBy { (_, v) -> -v }.take(10).toMap()
             val repoStarCount = repos.filter { it.watchers > 0 }.map { it.name to it.watchers }.sortedBy { (_, v) -> -v }.take(10).toMap()
 
@@ -33,6 +34,7 @@ object UserCtrl {
                     langRepoCount,
                     langStarCount,
                     langCommitCount,
+                    langColors,
                     repoCommitCount,
                     repoStarCount,
                     repoCommitCountDescriptions,
@@ -70,6 +72,7 @@ data class UserProfile(
         val langRepoCount: Map<String, Int>,
         val langStarCount: Map<String, Int>,
         val langCommitCount: Map<String, Int>,
+        val langColors: Map<String, String?>,
         val repoCommitCount: Map<String, Int>,
         val repoStarCount: Map<String, Int>,
         val repoCommitCountDescriptions: Map<String, String?>,

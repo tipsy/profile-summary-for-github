@@ -31,12 +31,17 @@ object Cache {
 
     // Read cache from disk, return empty map if no cache file exists
     @Suppress("UNCHECKED_CAST")
-    private fun readUserProfilesFromDisk(): MutableMap<String, UserProfile> = if (File(path).exists()) {
-        ObjectInputStream(
-                ByteArrayInputStream(File("cache/userinfo").readBytes())
-        ).readObject() as MutableMap<String, UserProfile>
-    } else {
-        mutableMapOf()
+    private fun readUserProfilesFromDisk(): MutableMap<String, UserProfile> {
+        if (File(path).exists()) {
+            try {
+                return ObjectInputStream(
+                        ByteArrayInputStream(File("cache/userinfo").readBytes())
+                ).readObject() as MutableMap<String, UserProfile>
+            } catch (e: Exception) {
+            }
+        }
+
+        return mutableMapOf()
     }
 
 }

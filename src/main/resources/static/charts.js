@@ -8,10 +8,11 @@ function donutChart(objectName, data) {
     let values = Object.values(data[objectName]);
     let colors = createColorArray(labels.length);
     let tooltipInfo = null;
-    window.languageColors = window.languageColors || {};
+    window.languageColors = data["langColors"] || window.languageColors || {};
     if ("langRepoCount" === objectName) {
-        // when the first language-set is loaded, set a color-profile for all languages
-        labels.forEach((language, i) => languageColors[language] = colors[i]);
+        // when the first language-set is loaded, ensure a color-profile for all languages
+        labels.filter(lang => !languageColors[lang])
+            .forEach((language, i) => languageColors[language] = colors[i % colors.length]);
     }
     if (["langRepoCount", "langStarCount", "langCommitCount"].indexOf(objectName) > -1) {
         // if the dataset is language-related, load color-profile
@@ -78,18 +79,14 @@ function donutChart(objectName, data) {
     });
 
     function createColorArray(length) {
-        let array = [];
-        while (array.length < length) {
-            array = array.concat([
-                "#54ca76",
-                "#f5c452",
-                "#f2637f",
-                "#9261f3",
-                "#31a4e6",
-                "#55cbcb",
-            ]);
-        }
-        return array;
+        const colors = ["#54ca76", "#f5c452", "#f2637f", "#9261f3", "#31a4e6", "#55cbcb"];
+        let arr = Array.from(Array(length), (_, i) => colors[i % colors.length]);
+
+        // Edge case: avoid consecutive repetition where first and last colors are the same
+        if (length % colors.length === 1)
+            arr[length - 1] = colors[1];
+
+        return arr;
     }
 
     function arrayRotate(arr, n) {
@@ -152,4 +149,3 @@ function lineChart(objectName, data) {
         }
     });
 }
-
