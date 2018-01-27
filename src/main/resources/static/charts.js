@@ -81,7 +81,7 @@ function donutChart(objectName, data) {
         const colors = ["#54ca76", "#f5c452", "#f2637f", "#9261f3", "#31a4e6", "#55cbcb"];
         let arr = Array.from(Array(length), (_, i) => colors[i % colors.length]);
 
-        // Edge case: avoid repetition where first and last colors are the same
+        // Edge case: avoid consecutive repetition where first and last colors are the same
         if (length % colors.length === 1)
             arr[length - 1] = colors[1];
 

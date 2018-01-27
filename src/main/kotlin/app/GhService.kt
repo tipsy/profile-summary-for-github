@@ -7,6 +7,8 @@ import org.eclipse.egit.github.core.service.RepositoryService
 import org.eclipse.egit.github.core.service.UserService
 import org.eclipse.egit.github.core.service.WatcherService
 import org.slf4j.LoggerFactory
+import org.yaml.snakeyaml.Yaml
+import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -23,6 +25,7 @@ object GhService {
     private val commitServices = clients.map { CommitService(it) }
     private val userServices = clients.map { UserService(it) }
     private val watcherServices = clients.map { WatcherService(it) }
+    private val colorsByLanguage = ConcurrentHashMap<String, String>()
 
     val repos: RepositoryService get() = repoServices.maxBy { it.client.remainingRequests }!!
     val commits: CommitService get() = commitServices.maxBy { it.client.remainingRequests }!!
@@ -33,8 +36,11 @@ object GhService {
 
     // Allows for parallel iteration and O(1) put/remove
     private val clientSessions = ConcurrentHashMap<WsSession, Boolean>()
+
     fun registerClient(ws: WsSession) = clientSessions.put(ws, true) == true
     fun unregisterClient(ws: WsSession) = clientSessions.remove(ws) == true
+
+    fun getLangColor(language: String): String? = colorsByLanguage[language]
 
     init {
         Executors.newScheduledThreadPool(2).apply {
@@ -62,6 +68,23 @@ object GhService {
                     }
                 }
             }, 0, 500, TimeUnit.MILLISECONDS)
+
+            // fetch and store the github language colors in the background
+            submit({
+                val endpoint = "https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml"
+                val data = URL(endpoint).openStream().bufferedReader().use { it.readText() }
+
+                val yaml = Yaml().load(data) as Map<String, Map<String, Any>>
+                yaml.forEach({ lang, info ->
+                    val color = info["color"]
+                    if (color != null && color is String && color.length == 7 && color.startsWith('#')) {
+                        colorsByLanguage[lang] = color
+                    }
+                })
+
+                if (colorsByLanguage.isEmpty())
+                    log.warn("GhService colorsByLanguage is empty!")
+            })
 
         }
     }
