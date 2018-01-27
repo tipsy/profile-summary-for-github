@@ -8,10 +8,11 @@ function donutChart(objectName, data) {
     let values = Object.values(data[objectName]);
     let colors = createColorArray(labels.length);
     let tooltipInfo = null;
-    window.languageColors = window.languageColors || {};
+    window.languageColors = data["langColors"] || window.languageColors || {};
     if ("langRepoCount" === objectName) {
-        // when the first language-set is loaded, set a color-profile for all languages
-        labels.forEach((language, i) => languageColors[language] = colors[i]);
+        // when the first language-set is loaded, ensure a color-profile for all languages
+        labels.filter(lang => !languageColors[lang])
+            .forEach((language, i) => languageColors[language] = colors[i % colors.length]);
     }
     if (["langRepoCount", "langStarCount", "langCommitCount"].indexOf(objectName) > -1) {
         // if the dataset is language-related, load color-profile
