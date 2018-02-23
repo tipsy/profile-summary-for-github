@@ -8,7 +8,7 @@
 ## run locally
 * `git clone https://github.com/tipsy/github-profile-summary.git`
 * `cd github-profile-summary`
-* `mvn install`
+* `./mvnw`
 * `java -jar target/github-profile-summary-jar-with-dependencies.jar`
 
 If no api-token is set, you only get ~50 requests/hour
