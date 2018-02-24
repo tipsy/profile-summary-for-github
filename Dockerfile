@@ -13,9 +13,9 @@ USER ghsum
 WORKDIR /var/github-summary
 
 ENV TOKENS=""
-ENTRYPOINT ["java", "-Dapi-tokens=${TOKENS}", "-jar", "github-profile-summary.jar"]
+ENTRYPOINT ["java", "-Dapi-tokens=${TOKENS}", "-jar", "profile-summary-for-github.jar"]
 EXPOSE 7070
 
 COPY --from=maven-build \
  --chown=ghsum:ghsum \
- /app/target/github-profile-summary-jar-with-dependencies.jar github-profile-summary.jar
+ /app/target/profile-summary-for-github-jar-with-dependencies.jar profile-summary-for-github.jar

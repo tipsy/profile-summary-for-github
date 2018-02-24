@@ -75,7 +75,7 @@
                 },
                 computed: {
                     profileUrl: function () {
-                        return "https://github-profile-summary.com/user/" + this.user.login;
+                        return "https://profile-summary-for-github.com/user/" + this.user.login;
                     },
                     shareText: function () {
                         return this.user.login + "'s GitHub profile - Visualized:";

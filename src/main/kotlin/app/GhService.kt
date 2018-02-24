@@ -43,7 +43,7 @@ object GhService {
             scheduleAtFixedRate({
                 repoServices.forEach {
                     try {
-                        it.getRepository("tipsy", "github-profile-summary")
+                        it.getRepository("tipsy", "profile-summary-for-github")
                         log.info("Pinged client ${clients.indexOf(it.client)} - client.remainingRequests was ${it.client.remainingRequests}")
                     } catch (e: Exception) {
                         log.info("Pinged client ${clients.indexOf(it.client)} - was rate-limited")

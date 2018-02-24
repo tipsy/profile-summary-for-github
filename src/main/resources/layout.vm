@@ -8,7 +8,7 @@
         <meta name="description" content="Github Profile Summary is a GitHub visualization tool written in Kotlin">
         <meta property="og:title" content="Github Profile Summary - Visualize your GitHub profile">
         <meta property="og:site_name" content="Github Profile Summary">
-        <meta property="og:url" content="https://github-profile-summary.com">
+        <meta property="og:url" content="https://profile-summary-for-github.com">
         <meta property="og:description" content="Github Profile Summary is a GitHub visualization tool written in Kotlin">
         <meta property="og:image" content="https://user-images.githubusercontent.com/1521451/33957306-8e1d8af0-e041-11e7-8e04-3de9e32868ba.PNG">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
@@ -33,7 +33,7 @@
         <footer>
             GitHub profile summary is built with <a href="https://javalin.io">javalin</a> <small>(kotlin web framework)</small> and
             <a href="http://www.chartjs.org/docs/latest/" target="_blank">chart.js</a> <small>(visualization)</small>.
-            Source is on <a href="https://github.com/tipsy/github-profile-summary" target="_blank">GitHub</a>.
+            Source is on <a href="https://github.com/tipsy/profile-summary-for-github" target="_blank">GitHub</a>.
         </footer>
         <span class="rate-limit">
             <span class="msg">The app is currently rate-limited<br>Please check back later</span>

@@ -50,7 +50,7 @@ object UserCtrl {
             return false
         }
         return try {
-            GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("github-profile-summary")
+            GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("profile-summary-for-github")
         } catch (e: Exception) {
             false
         }

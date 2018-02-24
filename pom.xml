@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.javalin</groupId>
-    <artifactId>github-profile-summary</artifactId>
+    <artifactId>profile-summary-for-github</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -138,10 +138,10 @@
                 <version>1.1.3</version>
                 <configuration>
                     <jdkVersion>1.8</jdkVersion>
-                    <appName>github-profile-summary</appName>
+                    <appName>profile-summary-for-github</appName>
                     <processTypes>
                         <!-- Tell Heroku how to launch your application -->
-                        <web>java -jar -Xmx256M ./target/github-profile-summary-jar-with-dependencies.jar</web>
+                        <web>java -jar -Xmx256M ./target/profile-summary-for-github-jar-with-dependencies.jar</web>
                     </processTypes>
                 </configuration>
             </plugin>

@@ -9,7 +9,7 @@
         <h4>Couldn't build profile for <span class="search-term">$q</span></h4>
         <p>
             If you are <span class="search-term">$q</span>,
-            please <a href="https://github.com/tipsy/github-profile-summary">star the repo</a> and try again.
+            please <a href="https://github.com/tipsy/profile-summary-for-github">star the repo</a> and try again.
             <br>
             <br>
             This is necessary because GitHub has a 5000req/hour rate-limit which would be <br>
