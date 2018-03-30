@@ -58,14 +58,7 @@ object UserCtrl {
             return false
         }
 
-        while (it.hasNext()) {
-            val repos = it.next()
-
-            if (repos.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null)
-                return true
-        }
-
-        return false
+        return it.find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
     }
 
     private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {
