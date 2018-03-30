@@ -50,15 +50,12 @@ object UserCtrl {
         if (GhService.remainingRequests == 0) {
             return false
         }
-
-        val it: PageIterator<Repository>
-        try {
-            it = GhService.watchers.pageWatched(username)!!
+        return try {
+            GhService.watchers.pageWatched(username)
+                    .find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
         } catch (e: Exception) {
             return false
         }
-
-        return it.find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
     }
 
     private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {
