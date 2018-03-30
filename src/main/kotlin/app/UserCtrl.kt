@@ -54,7 +54,7 @@ object UserCtrl {
             GhService.watchers.pageWatched(username)
                     .find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
         } catch (e: Exception) {
-            return false
+            false
         }
     }
 
