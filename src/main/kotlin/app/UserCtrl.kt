@@ -46,8 +46,12 @@ object UserCtrl {
         if (Cache.contains(username)) {
             return true
         }
-        if (GhService.remainingRequests == 0) {
+        val remainingRequests = GhService.remainingRequests
+        if (remainingRequests <= 0) {
             return false
+        }
+        if (Config.starRequestBypassLevel?.let { remainingRequests - it > 0 } == true) {
+            return true
         }
         return try {
             GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("profile-summary-for-github")
