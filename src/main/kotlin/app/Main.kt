@@ -54,7 +54,7 @@ fun main(args: Array<String>) {
 
         get("/search") { ctx ->
             val user = ctx.queryParam("q")?.trim() ?: ""
-            when ((unrestricted && user != "") || UserCtrl.hasStarredRepo(user)) {
+            when (user != "" && (unrestricted || UserCtrl.hasStarredRepo(user))) {
                 true -> ctx.redirect("/user/$user")
                 false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user), "gtmId", gtmId))
             }

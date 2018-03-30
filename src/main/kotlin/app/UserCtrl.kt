@@ -4,6 +4,7 @@ import app.util.CommitCountUtil
 import org.eclipse.egit.github.core.Repository
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
+import org.eclipse.egit.github.core.client.PageIterator
 import java.io.Serializable
 import java.time.Instant
 import kotlin.streams.toList
@@ -49,11 +50,22 @@ object UserCtrl {
         if (GhService.remainingRequests == 0) {
             return false
         }
-        return try {
-            GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("profile-summary-for-github")
+
+        val it: PageIterator<Repository>
+        try {
+            it = GhService.watchers.pageWatched(username)!!
         } catch (e: Exception) {
-            false
+            return false
         }
+
+        while (it.hasNext()) {
+            val repos = it.next()
+
+            if (repos.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null)
+                return true
+        }
+
+        return false
     }
 
     private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {
