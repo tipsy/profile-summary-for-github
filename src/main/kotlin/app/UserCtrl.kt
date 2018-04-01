@@ -54,7 +54,8 @@ object UserCtrl {
             return true
         }
         return try {
-            GhService.watchers.pageWatched(username, 1, 100).first().map { it.name }.contains("profile-summary-for-github")
+            GhService.watchers.pageWatched(username)
+                    .find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
         } catch (e: Exception) {
             false
         }
