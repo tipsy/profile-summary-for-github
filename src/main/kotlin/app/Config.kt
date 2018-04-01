@@ -17,9 +17,7 @@ object Config {
     fun getGtmId(): String? = getField("GTM_ID", "gtm-id")
 
     // Get 'star-bypass' from Heroku/System, or return null if not stored
-    val starRequestBypassLevel by lazy {
-        getField("STAR_BYPASS", "star-bypass")?.let { Integer.parseInt(it) }
-    }
+    fun getStarRequestBypassLevel() = getField("STAR_BYPASS", "star-bypass")?.let { Integer.parseInt(it) }
 
     private fun getField(envStr: String, sysStr: String): String? = ProcessBuilder().environment()[envStr]
             ?: System.getProperty(sysStr)
