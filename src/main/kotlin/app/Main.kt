@@ -17,14 +17,18 @@ fun main(args: Array<String>) {
 
     val log = LoggerFactory.getLogger("app.MainKt")
 
-    val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
-    val starBypassLevel = Config.getStarRequestBypassLevel()
     val gtmId = Config.getGtmId()
 
     fun canLoadUser(user: String): Boolean {
+        val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
         val remainingRequests by lazy { GhService.remainingRequests }
-        return unrestricted || Cache.contains(user) || (remainingRequests > 0
-                && (starBypassLevel?.let { remainingRequests - it > 0 } == true || UserCtrl.hasStarredRepo(user)))
+        val freeRemainingRequests by lazy { remainingRequests - (Config.freeRequestsBeforeStarRequirement() ?: remainingRequests) }
+        println(remainingRequests)
+        println(freeRemainingRequests)
+        return unrestricted
+                || Cache.contains(user)
+                || freeRemainingRequests > 0
+                || UserCtrl.hasStarredRepo(user)
     }
 
     val app = Javalin.create().apply {

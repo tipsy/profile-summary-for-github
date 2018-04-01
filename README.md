@@ -25,9 +25,9 @@ You can build a profile summary for any GitHub profile using `-Dunrestricted=tru
 
 * `java -Dunrestricted=true -jar target/profile-summary-for-github-jar-with-dependencies.jar`
 
-You can bypass user star checks for a given number of remaining requests by setting `star-bypass`:
+You can set a number of free requests before star requirement by passing `free-requests-before-star-requirement`
 
-* `java -Dstar-bypass=5000 -jar target/profile-summary-for-github-jar-with-dependencies.jar`
+* `java -Dfree-requests-before-star-requirement=5000 -jar target/profile-summary-for-github-jar-with-dependencies.jar`
 
 You can enable Google Tag Manager on your instance by setting `gtm-id`:
 
