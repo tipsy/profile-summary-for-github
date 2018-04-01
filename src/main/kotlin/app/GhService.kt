@@ -33,6 +33,7 @@ object GhService {
 
     // Allows for parallel iteration and O(1) put/remove
     private val clientSessions = ConcurrentHashMap<WsSession, Boolean>()
+
     fun registerClient(ws: WsSession) = clientSessions.put(ws, true) == true
     fun unregisterClient(ws: WsSession) = clientSessions.remove(ws) == true
 

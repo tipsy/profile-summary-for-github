@@ -42,19 +42,11 @@ object UserCtrl {
         return Cache.getUserProfile(username)!!
     }
 
-    fun hasStarredRepo(username: String): Boolean {
-        if (Cache.contains(username)) {
-            return true
-        }
-        if (GhService.remainingRequests == 0) {
-            return false
-        }
-        return try {
-            GhService.watchers.pageWatched(username)
-                    .find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
-        } catch (e: Exception) {
-            false
-        }
+    fun hasStarredRepo(username: String): Boolean = try {
+        GhService.watchers.pageWatched(username)
+                .find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
+    } catch (e: Exception) {
+        false
     }
 
     private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {
