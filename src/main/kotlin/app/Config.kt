@@ -17,7 +17,7 @@ object Config {
     fun getGtmId(): String? = getProperty("gtm-id")
 
     // Get 'star-bypass' from Heroku/System, or return null if not stored
-    fun freeRequestsBeforeStarRequirement() = getProperty("free-requests-before-star-requirement")?.let { Integer.parseInt(it) }
+    fun freeRequestCutoff() = getProperty("free-requests-cutoff")?.let { Integer.parseInt(it) }
 
     private fun getProperty(name: String): String? = getHerokuProperty(name) ?: System.getProperty(name)
 

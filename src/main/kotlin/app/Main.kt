@@ -22,10 +22,10 @@ fun main(args: Array<String>) {
     fun canLoadUser(user: String): Boolean {
         val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
         val remainingRequests by lazy { GhService.remainingRequests }
-        val freeRemainingRequests by lazy { remainingRequests - (Config.freeRequestsBeforeStarRequirement() ?: remainingRequests) }
+        val hasFreeRemainingRequests by lazy { remainingRequests > (Config.freeRequestCutoff() ?: remainingRequests) }
         return unrestricted
                 || Cache.contains(user)
-                || freeRemainingRequests > 0
+                || hasFreeRemainingRequests
                 || UserCtrl.hasStarredRepo(user)
     }
 
