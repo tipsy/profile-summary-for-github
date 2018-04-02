@@ -23,8 +23,6 @@ fun main(args: Array<String>) {
         val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
         val remainingRequests by lazy { GhService.remainingRequests }
         val freeRemainingRequests by lazy { remainingRequests - (Config.freeRequestsBeforeStarRequirement() ?: remainingRequests) }
-        println(remainingRequests)
-        println(freeRemainingRequests)
         return unrestricted
                 || Cache.contains(user)
                 || freeRemainingRequests > 0
