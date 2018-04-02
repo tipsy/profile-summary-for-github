@@ -4,11 +4,18 @@ import app.util.CommitCountUtil
 import org.eclipse.egit.github.core.Repository
 import org.eclipse.egit.github.core.RepositoryCommit
 import org.eclipse.egit.github.core.User
+import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.time.Instant
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.streams.toList
 
 object UserCtrl {
+
+    private val log = LoggerFactory.getLogger("app.UserCtrlKt")
+
+    private val repo = GhService.repos.getRepository("tipsy", "profile-summary-for-github")
+    private val watchers = ConcurrentHashMap.newKeySet<String>()
 
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
@@ -42,11 +49,20 @@ object UserCtrl {
         return Cache.getUserProfile(username)!!
     }
 
-    fun hasStarredRepo(username: String): Boolean = try {
-        GhService.watchers.pageWatched(username)
-                .find { it.find { it.name == "profile-summary-for-github" && it.owner.login == "tipsy" } != null } != null
+    fun hasStarredRepo(username: String): Boolean {
+        addAllWatchers(pageNumber = watchers.size / 100 + 1)
+        return watchers.find { it == username.toLowerCase() } != null
+    }
+
+    fun initWatcherSet() {
+        val lastPage = repo.watchers / 100 + 1
+        (0..lastPage).toList().parallelStream().forEach { page -> addAllWatchers(page) }
+    }
+
+    private fun addAllWatchers(pageNumber: Int) = try {
+        watchers.addAll(GhService.watchers.pageWatchers(repo, pageNumber, 100).first().map { it.login.toLowerCase() })
     } catch (e: Exception) {
-        false
+        log.info("Exception while adding watchers", e)
     }
 
     private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {

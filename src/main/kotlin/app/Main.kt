@@ -104,4 +104,6 @@ fun main(args: Array<String>) {
 
     app.start()
 
+    UserCtrl.initWatcherSet()
+
 }
