@@ -16,17 +16,19 @@ import org.slf4j.LoggerFactory
 fun main(args: Array<String>) {
 
     val log = LoggerFactory.getLogger("app.MainKt")
-
+    val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
+    val freeRequestsBeforeStarRequirement = Config.freeRequestsBeforeStarRequirement()
     val gtmId = Config.getGtmId()
 
     fun canLoadUser(user: String): Boolean {
-        val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
         val remainingRequests by lazy { GhService.remainingRequests }
-        val freeRemainingRequests by lazy { remainingRequests - (Config.freeRequestsBeforeStarRequirement() ?: remainingRequests) }
+        val freeRemainingRequests by lazy {
+            remainingRequests - (freeRequestsBeforeStarRequirement ?: remainingRequests)
+        }
         return unrestricted
                 || Cache.contains(user)
                 || freeRemainingRequests > 0
-                || UserCtrl.hasStarredRepo(user)
+                || (remainingRequests > 0 && UserCtrl.hasStarredRepo(user))
     }
 
     val app = Javalin.create().apply {
