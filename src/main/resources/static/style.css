@@ -112,3 +112,7 @@ input {
         right: 0;
     }
 }
+
+.rate-limit-info {
+    max-width: 460px;
+}

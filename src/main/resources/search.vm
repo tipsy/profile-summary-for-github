@@ -7,18 +7,26 @@
     </form>
     #if($q != "")
         <h4>Couldn't build profile for <span class="search-term">$q</span></h4>
-        <p>
-            If you are <span class="search-term">$q</span>,
-            please <a href="https://github.com/tipsy/profile-summary-for-github">star the repo</a> and try again.
-            <br>
-            <br>
-            This is necessary because GitHub has a 5000req/hour rate-limit which would be <br>
-            reached very quickly if you tried to analyze some of the bigger profiles on GitHub.
-            <br>
-            <br>
-            If the app has been rate-limited (check lower right corner), please come back later<br>
-            or build the app locally and use your own token
-        </p>
+        <div class="rate-limit-info">
+            <p>
+                If you are <span class="search-term">$q</span>, please
+                <a href="https://github.com/tipsy/profile-summary-for-github">star the repo</a> and try again.
+            </p>
+            <p>
+                This is necessary because GitHub has a 5000req/token/hour rate-limit which would be
+                reached very quickly if you tried to analyze some of the bigger profiles on GitHub.
+            </p>
+            <p>
+                The app is running with two tokens, which gives 10000 requests.
+                The first 5000 requests can be used to build any profile, but the last 5000 requests are
+                reserved for users building their own profile. To confirm that you're building your own
+                profile, we check if you've starred the repository.
+            </p>
+            <p>
+                If the app has been rate-limited (check lower right corner), please come back later
+                or build the app locally and use your own tokens.
+            </p>
+        </div>
     #end
 </div>
 <script>
