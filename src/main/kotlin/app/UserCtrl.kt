@@ -50,11 +50,12 @@ object UserCtrl {
     }
 
     fun hasStarredRepo(username: String): Boolean {
-        if (watchers.contains(username))
+        val login = username.toLowerCase()
+        if (watchers.contains(login))
             return true
 
         syncWatchers()
-        return watchers.contains(username)
+        return watchers.contains(login)
     }
 
     fun syncWatchers() {
