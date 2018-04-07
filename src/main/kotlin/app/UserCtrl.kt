@@ -63,7 +63,10 @@ object UserCtrl {
         if (watchers.size < realWatchers) {
             val startPage = watchers.size / 100 + 1
             val lastPage = realWatchers / 100 + 1
-            IntStream.rangeClosed(startPage, lastPage).parallel().forEach { page -> addAllWatchers(page) }
+            if (startPage == lastPage)
+                addAllWatchers(lastPage)
+            else
+                IntStream.rangeClosed(startPage, lastPage).parallel().forEach { page -> addAllWatchers(page) }
         }
     }
 
