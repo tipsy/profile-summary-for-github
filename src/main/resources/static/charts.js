@@ -78,7 +78,6 @@ function donutChart(objectName, data) {
     });
 
     function createColorArray(length) {
-
         const colors = [
             "#54ca76",
             "#f5c452",
@@ -158,4 +157,3 @@ function lineChart(objectName, data) {
         }
     });
 }
-
