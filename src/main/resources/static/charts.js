@@ -145,7 +145,8 @@ function lineChart(objectName, data) {
                     display: false
                 }],
                 yAxes: [{
-                    position: "right"
+                    position: "right",
+                    beginAtZero: true
                 }]
             },
             legend: {
