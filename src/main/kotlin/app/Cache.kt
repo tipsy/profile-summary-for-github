@@ -9,7 +9,7 @@ import java.util.concurrent.Executors
 object Cache {
 
     private const val path = "cache/userinfo"
-    private val userProfiles = ConcurrentHashMap(readUserProfilesFromDisk())
+    private val userProfiles = readUserProfilesFromDisk()
     private val fileSaveExecutor = Executors.newSingleThreadExecutor()
 
     // Put userProfile in cache, then serialize cache and write it to disk
@@ -37,22 +37,22 @@ object Cache {
 
     // Read cache from disk, return empty map if no cache file exists
     @Suppress("UNCHECKED_CAST")
-    private fun readUserProfilesFromDisk(): MutableMap<String, UserProfile> {
+    private fun readUserProfilesFromDisk(): ConcurrentHashMap<String, UserProfile> {
         try {
             File(path).apply {
                 if (exists()) {
                     ObjectInputStream(ByteArrayInputStream(readBytes())).let {
                         val obj = it.readObject()
 
-                        if (obj is MutableMap<*, *>)
-                            return obj as MutableMap<String, UserProfile>
+                        if (obj is ConcurrentHashMap<*, *>)
+                            return obj as ConcurrentHashMap<String, UserProfile>
                     }
                 }
             }
         } catch (e: Exception) {
         }
 
-        return mutableMapOf()
+        return ConcurrentHashMap()
     }
 
 }
