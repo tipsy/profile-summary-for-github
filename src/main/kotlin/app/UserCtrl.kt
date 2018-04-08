@@ -13,6 +13,7 @@ import kotlin.streams.toList
 
 object UserCtrl {
 
+    private const val pageSize = 100
     private val log = LoggerFactory.getLogger("app.UserCtrlKt")
     private val repo = GhService.repos.getRepository("tipsy", "profile-summary-for-github")
     private val watchers = ConcurrentHashMap.newKeySet<String>()
@@ -61,14 +62,17 @@ object UserCtrl {
     fun syncWatchers() {
         val realWatchers = repo.watchers
         if (watchers.size < realWatchers) {
-            val startPage = watchers.size / 100 + 1
-            val lastPage = realWatchers / 100 + 1
-            IntStream.rangeClosed(startPage, lastPage).parallel().forEach { page -> addAllWatchers(page) }
+            val startPage = watchers.size / pageSize + 1
+            val lastPage = realWatchers / pageSize + 1
+            if (startPage == lastPage)
+                addAllWatchers(lastPage)
+            else
+                IntStream.rangeClosed(startPage, lastPage).parallel().forEach { page -> addAllWatchers(page) }
         }
     }
 
     private fun addAllWatchers(pageNumber: Int) = try {
-        GhService.watchers.pageWatchers(repo, pageNumber, 100).first().forEach { watchers.add(it.login.toLowerCase()) }
+        GhService.watchers.pageWatchers(repo, pageNumber, pageSize).first().forEach { watchers.add(it.login.toLowerCase()) }
     } catch (e: Exception) {
         log.info("Exception while adding watchers", e)
     }

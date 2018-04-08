@@ -78,7 +78,6 @@ function donutChart(objectName, data) {
     });
 
     function createColorArray(length) {
-
         const colors = [
             "#54ca76",
             "#f5c452",
@@ -145,7 +144,8 @@ function lineChart(objectName, data) {
                     display: false
                 }],
                 yAxes: [{
-                    position: "right"
+                    position: "right",
+                    beginAtZero: true
                 }]
             },
             legend: {
@@ -157,4 +157,3 @@ function lineChart(objectName, data) {
         }
     });
 }
-

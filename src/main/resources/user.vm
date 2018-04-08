@@ -1,5 +1,5 @@
 #parse("/layout.vm")
-#@layout("$user' GitHub profile summary")
+#@layout("$user's GitHub profile summary")
 <div id="vue" v-cloak>
     <div class="user-info">
         <img :src="user.avatarUrl" :alt="user.login" class="user-info__img">
@@ -117,4 +117,3 @@
     })()
 </script>
 #end
-
