@@ -4,8 +4,7 @@ import app.util.HerokuUtil
 import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.core.util.Header
-import io.javalin.embeddedserver.jetty.EmbeddedJettyFactory
-import io.javalin.translator.template.TemplateUtil.model
+import io.javalin.rendering.template.TemplateUtil.model
 import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.eclipse.egit.github.core.client.RequestException
 import org.eclipse.jetty.server.Server
@@ -30,33 +29,31 @@ fun main(args: Array<String>) {
     }
 
     val app = Javalin.create().apply {
-        enableStandardRequestLogging()
-        enableDynamicGzip()
-        embeddedServer(EmbeddedJettyFactory {
+        server {
             Server(QueuedThreadPool(200, 8, 120000)).apply {
                 connectors = arrayOf(ServerConnector(server).apply {
                     port = Config.getPort() ?: 7070
                     idleTimeout = 120_000
                 })
             }
-        })
+        }
     }
 
     // add routes
     app.apply {
 
         get("/api/user/:user") { ctx ->
-            val user = ctx.param("user")!!
+            val user = ctx.pathParam("user")
             when (canLoadUser(user)) {
-                true -> ctx.json(UserCtrl.getUserProfile(ctx.param("user")!!))
+                true -> ctx.json(UserCtrl.getUserProfile(ctx.pathParam("user")))
                 false -> ctx.status(400)
             }
         }
 
         get("/user/:user") { ctx ->
-            val user = ctx.param("user")!!
+            val user = ctx.pathParam("user")
             when (canLoadUser(user)) {
-                true -> ctx.renderVelocity("user.vm", model("user", user, "gtmId", gtmId))
+                true -> ctx.render("user.vm", model("user", user, "gtmId", gtmId))
                 false -> ctx.redirect("/search?q=$user")
             }
         }
@@ -65,7 +62,7 @@ fun main(args: Array<String>) {
             val user = ctx.queryParam("q")?.trim() ?: ""
             when (user != "" && canLoadUser(user)) {
                 true -> ctx.redirect("/user/$user")
-                false -> ctx.renderVelocity("search.vm", model("q", escapeHtml(user), "gtmId", gtmId))
+                false -> ctx.render("search.vm", model("q", escapeHtml(user), "gtmId", gtmId))
             }
         }
 
@@ -92,7 +89,7 @@ fun main(args: Array<String>) {
         }
 
         error(404) { ctx ->
-            if (ctx.header(Header.ACCEPT)?.contains("application/json") == false || !ctx.response().isCommitted) {
+            if (ctx.header(Header.ACCEPT)?.contains("application/json") == false || !ctx.res.isCommitted) {
                 ctx.redirect("/search")
             }
         }
