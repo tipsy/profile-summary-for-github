@@ -1,9 +1,9 @@
 package app.util
 
 import io.javalin.Javalin
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 /**
  * A very naive IP-based rate-limiting mechanism
@@ -35,12 +35,12 @@ object RateLimitUtil {
             ctx.result("You can't spam this much. I'll give you a new request every five seconds.")
         }
 
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate({
+        launch {
             ipReqCount.forEachKey(1) { ip ->
                 ipReqCount.computeIfPresent(ip) { _, count -> if (count > 1) count - 1 else null }
             }
-        }, 0, 5, TimeUnit.SECONDS)
-
+            delay(5 * 1000)
+        }
     }
 
 }

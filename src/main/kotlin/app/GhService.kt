@@ -1,6 +1,8 @@
 package app
 
 import io.javalin.websocket.WsSession
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import org.eclipse.egit.github.core.client.GitHubClient
 import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.RepositoryService
@@ -8,8 +10,6 @@ import org.eclipse.egit.github.core.service.UserService
 import org.eclipse.egit.github.core.service.WatcherService
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 object GhService {
 
@@ -38,10 +38,8 @@ object GhService {
     fun unregisterClient(ws: WsSession) = clientSessions.remove(ws) == true
 
     init {
-        Executors.newScheduledThreadPool(2).apply {
-
-            // ping clients every other minute to make sure remainingRequests is correct
-            scheduleAtFixedRate({
+        launch {
+            while(true){
                 repoServices.forEach {
                     try {
                         it.getRepository("tipsy", "profile-summary-for-github")
@@ -49,11 +47,13 @@ object GhService {
                     } catch (e: Exception) {
                         log.info("Pinged client ${clients.indexOf(it.client)} - was rate-limited")
                     }
+                    delay(2 * 60 * 1000)
                 }
-            }, 0, 2, TimeUnit.MINUTES)
+            }
+        }
 
-            // update all connected clients with remainingRequests twice per second
-            scheduleAtFixedRate({
+        launch {
+            while(true){
                 val remainingRequests = remainingRequests.toString()
                 clientSessions.forEachKey(1) {
                     try {
@@ -62,8 +62,8 @@ object GhService {
                         log.error(e.toString())
                     }
                 }
-            }, 0, 500, TimeUnit.MILLISECONDS)
-
+                delay(500)
+            }
         }
     }
 

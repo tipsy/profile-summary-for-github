@@ -1,21 +1,20 @@
 package app
 
+import kotlinx.coroutines.experimental.launch
 import java.io.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit.HOURS
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
 
 object Cache {
 
     private const val path = "cache/userinfo"
     private val userProfiles = readUserProfilesFromDisk()
-    private val fileSaveExecutor = Executors.newSingleThreadExecutor()
 
     // Put userProfile in cache, then serialize cache and write it to disk
     fun putUserProfile(userProfile: UserProfile) {
         userProfiles[userProfile.user.login.toLowerCase()] = userProfile
-        fileSaveExecutor.execute {
+        launch {
             ByteArrayOutputStream().let {
                 ObjectOutputStream(it).writeObject(userProfiles)
                 File(path).apply {
