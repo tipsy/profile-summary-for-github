@@ -84,7 +84,10 @@ function donutChart(objectName, data) {
             "#f2637f",
             "#9261f3",
             "#31a4e6",
-            "#55cbcb"
+            "#55cbcb",
+            "#e45f24",
+            "#660066",
+            "#546e7a"
         ];
 
         let array = [...Array(length).keys()].map(i => colors[i % colors.length]);
