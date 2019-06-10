@@ -1,6 +1,6 @@
 package app
 
-import io.javalin.websocket.WsSession
+import io.javalin.websocket.WsContext
 import org.eclipse.egit.github.core.client.GitHubClient
 import org.eclipse.egit.github.core.service.CommitService
 import org.eclipse.egit.github.core.service.RepositoryService
@@ -32,10 +32,10 @@ object GhService {
     val remainingRequests: Int get() = clients.sumBy { it.remainingRequests }
 
     // Allows for parallel iteration and O(1) put/remove
-    private val clientSessions = ConcurrentHashMap<WsSession, Boolean>()
+    private val clientSessions = ConcurrentHashMap<WsContext, Boolean>()
 
-    fun registerClient(ws: WsSession) = clientSessions.put(ws, true) == true
-    fun unregisterClient(ws: WsSession) = clientSessions.remove(ws) == true
+    fun registerClient(ws: WsContext) = clientSessions.put(ws, true) == true
+    fun unregisterClient(ws: WsContext) = clientSessions.remove(ws) == true
 
     init {
         Executors.newScheduledThreadPool(2).apply {

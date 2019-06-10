@@ -4,7 +4,7 @@ import app.util.HerokuUtil
 import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.core.util.Header
-import io.javalin.rendering.template.TemplateUtil.model
+import io.javalin.plugin.rendering.template.TemplateUtil.model
 import org.apache.commons.lang.StringEscapeUtils.escapeHtml
 import org.eclipse.egit.github.core.client.RequestException
 import org.eclipse.jetty.server.Server
@@ -12,7 +12,7 @@ import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.slf4j.LoggerFactory
 
-fun main(args: Array<String>) {
+fun main() {
 
     val log = LoggerFactory.getLogger("app.MainKt")
     val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
@@ -28,8 +28,8 @@ fun main(args: Array<String>) {
                 || (remainingRequests > 0 && UserCtrl.hasStarredRepo(user))
     }
 
-    val app = Javalin.create().apply {
-        server {
+    val app = Javalin.create {
+        it.server {
             Server(QueuedThreadPool(200, 8, 120000)).apply {
                 connectors = arrayOf(ServerConnector(server).apply {
                     port = Config.getPort() ?: 7070
@@ -67,9 +67,9 @@ fun main(args: Array<String>) {
         }
 
         ws("/rate-limit-status") { ws ->
-            ws.onConnect { session -> GhService.registerClient(session) }
-            ws.onClose { session, _, _ -> GhService.unregisterClient(session) }
-            ws.onError { session, _ -> GhService.unregisterClient(session) }
+            ws.onConnect { ctx -> GhService.registerClient(ctx) }
+            ws.onClose { ctx -> GhService.unregisterClient(ctx) }
+            ws.onError { ctx -> GhService.unregisterClient(ctx) }
         }
 
     }
