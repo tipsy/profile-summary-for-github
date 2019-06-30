@@ -28,6 +28,7 @@ fun main() {
     }.apply {
         get("/api/can-load") { ctx ->
             val user = ctx.queryParam<String>("user").get()
+            if (!UserService.userExists(user)) throw NotFoundResponse()
             ctx.status(if (UserService.canLoadUser(user)) 200 else 400)
         }
         get("/api/user/:user") { ctx ->

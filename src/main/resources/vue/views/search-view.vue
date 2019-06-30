@@ -3,7 +3,10 @@
         <div class="search-screen">
             <h1>Enter GitHub username</h1>
             <input type="text" name="q" placeholder="ex. 'tipsy'" v-model="query" autofocus @keydown.enter="search">
-            <div v-if="failedQuery">
+            <div v-if="error && error.response.status === 404">
+                <h4>Can't find user <span class="search-term">{{failedQuery}}</span>. Check spelling.</h4>
+            </div>
+            <div v-else-if="failedQuery">
                 <h4>Can't build profile for <span class="search-term">{{failedQuery}}</span></h4>
                 <p>
                     If you are <span class="search-term">{{failedQuery}}</span>, please
@@ -26,14 +29,20 @@
     Vue.component("search-view", {
         template: "#search-view",
         data: () => ({
+            error: null,
             failedQuery: "",
             query: ""
         }),
         methods: {
             search() {
+                this.error = null;
+                this.failedQuery = null;
                 axios.get("/api/can-load?user=" + this.query)
                     .then(() => window.location = "/user/" + this.query)
-                    .catch(() => this.failedQuery = this.query)
+                    .catch(error => {
+                        this.error = error;
+                        this.failedQuery = this.query
+                    });
             }
         },
     });
