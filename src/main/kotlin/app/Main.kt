@@ -4,9 +4,9 @@ import app.util.HerokuUtil
 import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.core.util.Header
-import io.javalin.plugin.rendering.template.TemplateUtil.model
-import org.apache.commons.lang.StringEscapeUtils.escapeHtml
-import org.eclipse.egit.github.core.client.RequestException
+import io.javalin.http.BadRequestResponse
+import io.javalin.http.NotFoundResponse
+import io.javalin.plugin.rendering.vue.VueComponent
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.thread.QueuedThreadPool
@@ -15,20 +15,8 @@ import org.slf4j.LoggerFactory
 fun main() {
 
     val log = LoggerFactory.getLogger("app.MainKt")
-    val unrestricted = Config.getUnrestrictedState()?.toBoolean() == true
-    val freeRequestCutoff = Config.freeRequestCutoff()
-    val gtmId = Config.getGtmId()
-
-    fun canLoadUser(user: String): Boolean {
-        val remainingRequests by lazy { GhService.remainingRequests }
-        val hasFreeRemainingRequests by lazy { remainingRequests > (freeRequestCutoff ?: remainingRequests) }
-        return unrestricted
-                || Cache.contains(user)
-                || hasFreeRemainingRequests
-                || (remainingRequests > 0 && UserCtrl.hasStarredRepo(user))
-    }
-
     val app = Javalin.create {
+        it.addStaticFiles("/public")
         it.server {
             Server(QueuedThreadPool(200, 8, 120000)).apply {
                 connectors = arrayOf(ServerConnector(server).apply {
@@ -37,70 +25,34 @@ fun main() {
                 })
             }
         }
-    }
-
-    // add routes
-    app.apply {
-
+    }.apply {
+        get("/api/can-load") { ctx ->
+            val user = ctx.queryParam<String>("user").get()
+            ctx.status(if (UserService.canLoadUser(user)) 200 else 400)
+        }
         get("/api/user/:user") { ctx ->
             val user = ctx.pathParam("user")
-            when (canLoadUser(user)) {
-                true -> ctx.json(UserCtrl.getUserProfile(ctx.pathParam("user")))
-                false -> ctx.status(400)
-            }
+            if (!UserService.userExists(user)) throw NotFoundResponse()
+            if (!UserService.canLoadUser(user)) throw BadRequestResponse("Can't load user")
+            ctx.json(UserService.getUserProfile(user))
         }
-
-        get("/user/:user") { ctx ->
-            val user = ctx.pathParam("user")
-            when (canLoadUser(user)) {
-                true -> ctx.render("user.vm", model("user", user, "gtmId", gtmId))
-                false -> ctx.redirect("/search?q=$user")
-            }
-        }
-
-        get("/search") { ctx ->
-            val user = ctx.queryParam("q")?.trim() ?: ""
-            when (user != "" && canLoadUser(user)) {
-                true -> ctx.redirect("/user/$user")
-                false -> ctx.render("search.vm", model("q", escapeHtml(user), "gtmId", gtmId))
-            }
-        }
-
+        get("/search", VueComponent("<search-view></search-view>"))
+        get("/user/:user", VueComponent("<user-view></user-view>"))
         ws("/rate-limit-status") { ws ->
-            ws.onConnect { ctx -> GhService.registerClient(ctx) }
-            ws.onClose { ctx -> GhService.unregisterClient(ctx) }
-            ws.onError { ctx -> GhService.unregisterClient(ctx) }
+            ws.onConnect { GhService.registerClient(it) }
+            ws.onClose { GhService.unregisterClient(it) }
+            ws.onError { GhService.unregisterClient(it) }
         }
+        after { it.cookie("gtm-id", Config.getGtmId() ?: "") }
+    }.exception(Exception::class.java) { e, ctx ->
+        log.warn("Uncaught exception", e)
+        ctx.status(500)
+    }.error(404) {
+        if (it.header(Header.ACCEPT)?.contains("text/html") == true) it.redirect("/search")
+    }.start()
 
-    }
-
-    // add exception/error handlers
-    app.apply {
-
-        exception(Exception::class.java) { e, ctx ->
-            log.warn("Uncaught exception", e)
-            ctx.status(500)
-        }
-
-        exception(RequestException::class.java) { e, ctx ->
-            if (e.message == "Not Found (404)") {
-                ctx.status(404)
-            }
-        }
-
-        error(404) { ctx ->
-            if (ctx.header(Header.ACCEPT)?.contains("application/json") == false || !ctx.res.isCommitted) {
-                ctx.redirect("/search")
-            }
-        }
-
-    }
-
-    RateLimitUtil.enableTerribleRateLimiting(app)
     HerokuUtil.enableSslRedirect(app)
-
-    app.start()
-
-    UserCtrl.syncWatchers()
+    RateLimitUtil.enableTerribleRateLimiting(app)
+    UserService.syncWatchers()
 
 }

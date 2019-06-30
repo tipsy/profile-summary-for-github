@@ -11,12 +11,28 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.stream.IntStream
 import kotlin.streams.toList
 
-object UserCtrl {
+object UserService {
 
     private const val pageSize = 100
     private val log = LoggerFactory.getLogger("app.UserCtrlKt")
     private val repo = GhService.repos.getRepository("tipsy", "profile-summary-for-github")
     private val watchers = ConcurrentHashMap.newKeySet<String>()
+    private val freeRequestCutoff = Config.freeRequestCutoff()
+
+    fun userExists(user: String): Boolean = try {
+        GhService.users.getUser(user) != null
+    } catch (e: Exception) {
+        false
+    }
+
+    fun canLoadUser(user: String): Boolean {
+        val remainingRequests by lazy { GhService.remainingRequests }
+        val hasFreeRemainingRequests by lazy { remainingRequests > (freeRequestCutoff ?: remainingRequests) }
+        return Config.unrestricted()
+                || Cache.contains(user)
+                || hasFreeRemainingRequests
+                || (remainingRequests > 0 && hasStarredRepo(user))
+    }
 
     fun getUserProfile(username: String): UserProfile {
         if (Cache.invalid(username)) {
@@ -50,11 +66,9 @@ object UserCtrl {
         return Cache.getUserProfile(username)!!
     }
 
-    fun hasStarredRepo(username: String): Boolean {
+    private fun hasStarredRepo(username: String): Boolean {
         val login = username.toLowerCase()
-        if (watchers.contains(login))
-            return true
-
+        if (watchers.contains(login)) return true
         syncWatchers()
         return watchers.contains(login)
     }

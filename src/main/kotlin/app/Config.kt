@@ -11,7 +11,7 @@ object Config {
     fun getApiTokens(): String? = getProperty("api-tokens")
 
     // Get 'unrestricted' state from Heroku/System, or return null if not set
-    fun getUnrestrictedState(): String? = getProperty("unrestricted")
+    fun unrestricted(): Boolean = getProperty("unrestricted")?.toBoolean() == true
 
     // Get 'gtm-id' from Heroku/System, or return null if not set
     fun getGtmId(): String? = getProperty("gtm-id")

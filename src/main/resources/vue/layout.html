@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Profile Summary For GitHub</title>
+        <link rel="icon" href="/favicon.png">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Github Profile Summary is a GitHub visualization tool written in Kotlin">
+        <meta property="og:title" content="Github Profile Summary - Visualize your GitHub profile">
+        <meta property="og:site_name" content="Github Profile Summary">
+        <meta property="og:url" content="https://profile-summary-for-github.com">
+        <meta property="og:description" content="Github Profile Summary is a GitHub visualization tool written in Kotlin">
+        <meta property="og:image" content="https://user-images.githubusercontent.com/1521451/33957306-8e1d8af0-e041-11e7-8e04-3de9e32868ba.PNG">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Barlow+Semi+Condensed">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/load-awesome@1.1.0/css/square-jelly-box.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+        @componentRegistration
+    </head>
+    <body>
+        <main id="main-vue" class="content" v-cloak>
+            @routeComponent
+        </main>
+        <script>
+            new Vue({el: "#main-vue"});
+        </script>
+    </body>
+</html>
