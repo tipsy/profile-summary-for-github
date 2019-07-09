@@ -4,7 +4,7 @@
         if (canvas === null) {
             return;
         }
-        let userId = document.body.getAttribute("data-user-id");
+        let userId = data.user.login;
         let labels = Object.keys(data[objectName]);
         let values = Object.values(data[objectName]);
         let colors = createColorArray(labels.length);
