@@ -1,0 +1,21 @@
+{
+  "name": "GitHub Profile Summary",
+  "description": "Tool for visualizing GitHub profiles",
+  "website": "https://github-profile-summary.com/",
+  "repository": "https://github.com/tipsy/github-profile-summary",
+  "env": {
+    "API_TOKENS": {
+      "description": "If no api-token is set, you only get ~50 requests/hour. Generate a token at https://github.com/settings/tokens, and input here. You can use a comma-separated list of tokens to increase your rate-limit.",
+      "required": false
+    },
+    "UNRESTRICTED": {
+      "description": "Allow profile summary to be built for any GitHub profile. Summary creation of large profiles can quickly consume your API request limit.",
+      "required": false,
+      "value": "false"
+    },
+    "GTM_ID": {
+      "description": "Provide a Google Tag Manager ID to enable GTM.",
+      "required": false
+    }
+  }
+}
