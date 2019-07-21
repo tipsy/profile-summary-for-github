@@ -3,6 +3,8 @@ package app
 import app.util.HerokuUtil
 import app.util.RateLimitUtil
 import io.javalin.Javalin
+import io.javalin.core.compression.Brotli
+import io.javalin.core.compression.Gzip
 import io.javalin.core.util.Header
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
@@ -17,6 +19,7 @@ fun main() {
     val log = LoggerFactory.getLogger("app.MainKt")
     val app = Javalin.create {
         it.addStaticFiles("/public")
+        it.compressionStrategy(Brotli(), Gzip())
         it.server {
             Server(QueuedThreadPool(200, 8, 120000)).apply {
                 connectors = arrayOf(ServerConnector(server).apply {
