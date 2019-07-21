@@ -7,8 +7,12 @@
     <groupId>io.javalin</groupId>
     <artifactId>profile-summary-for-github</artifactId>
     <version>1.0</version>
+    <name>${artifactId}</name>
 
     <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <kotlin.version>1.3.21</kotlin.version>
     </properties>
 
