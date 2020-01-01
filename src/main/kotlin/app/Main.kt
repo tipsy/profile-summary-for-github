@@ -1,23 +1,23 @@
 package app
 
-import app.util.HerokuUtil
-import app.util.RateLimitUtil
 import io.javalin.Javalin
 import io.javalin.core.compression.Brotli
 import io.javalin.core.compression.Gzip
-import io.javalin.core.util.Header
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
+import io.javalin.http.util.RateLimit
 import io.javalin.plugin.rendering.vue.VueComponent
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.thread.QueuedThreadPool
 import org.slf4j.LoggerFactory
+import java.util.concurrent.TimeUnit
 
 fun main() {
 
     val log = LoggerFactory.getLogger("app.MainKt")
     val app = Javalin.create {
+        it.enforceSsl = true
         it.addStaticFiles("/public")
         it.compressionStrategy(Brotli(), Gzip())
         it.server {
@@ -29,6 +29,7 @@ fun main() {
             }
         }
     }.apply {
+        before("/api/*") { RateLimit(it).requestPerTimeUnit(20, TimeUnit.MINUTES) }
         get("/api/can-load") { ctx ->
             val user = ctx.queryParam<String>("user").get()
             if (!UserService.userExists(user)) throw NotFoundResponse()
@@ -51,12 +52,10 @@ fun main() {
     }.exception(Exception::class.java) { e, ctx ->
         log.warn("Uncaught exception", e)
         ctx.status(500)
-    }.error(404) {
-        if (it.header(Header.ACCEPT)?.contains("text/html") == true) it.redirect("/search")
+    }.error(404, "html") {
+        it.redirect("/search")
     }.start()
 
-    HerokuUtil.enableSslRedirect(app)
-    RateLimitUtil.enableTerribleRateLimiting(app)
     UserService.syncWatchers()
 
 }
