@@ -5,6 +5,7 @@ import io.javalin.core.compression.Brotli
 import io.javalin.core.compression.Gzip
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
+import io.javalin.http.context.queryParam
 import io.javalin.http.util.RateLimit
 import io.javalin.plugin.rendering.vue.VueComponent
 import org.eclipse.jetty.server.Server
