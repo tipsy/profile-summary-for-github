@@ -24,10 +24,10 @@ object GhService {
     private val userServices = clients.map { UserService(it) }
     private val watcherServices = clients.map { WatcherService(it) }
 
-    val repos: RepositoryService get() = repoServices.maxBy { it.client.remainingRequests }!!
-    val commits: CommitService get() = commitServices.maxBy { it.client.remainingRequests }!!
-    val users: UserService get() = userServices.maxBy { it.client.remainingRequests }!!
-    val watchers: WatcherService get() = watcherServices.maxBy { it.client.remainingRequests }!!
+    val repos: RepositoryService get() = repoServices.maxByOrNull { it.client.remainingRequests }!!
+    val commits: CommitService get() = commitServices.maxByOrNull { it.client.remainingRequests }!!
+    val users: UserService get() = userServices.maxByOrNull { it.client.remainingRequests }!!
+    val watchers: WatcherService get() = watcherServices.maxByOrNull { it.client.remainingRequests }!!
 
     val remainingRequests: Int get() = clients.sumBy { it.remainingRequests }
 
