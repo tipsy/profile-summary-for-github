@@ -9,6 +9,7 @@ import io.javalin.http.staticfiles.Location
 import io.javalin.http.util.NaiveRateLimit
 import io.javalin.plugin.rendering.vue.JavalinVue
 import io.javalin.plugin.rendering.vue.VueComponent
+import org.eclipse.jetty.server.HttpConnectionFactory
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.thread.QueuedThreadPool
@@ -29,6 +30,9 @@ fun main() {
                 connectors = arrayOf(ServerConnector(server).apply {
                     port = Config.getPort() ?: 7070
                     idleTimeout = 120_000
+                    connectionFactories.filterIsInstance<HttpConnectionFactory>().forEach {
+                        it.httpConfiguration.sendServerVersion = false
+                    }
                 })
             }
         }
