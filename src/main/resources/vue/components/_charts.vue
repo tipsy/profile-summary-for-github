@@ -1,4 +1,6 @@
 <script>
+    const UNKNOWN_LANGUAGE = "Unknown";
+
     function donutChart(objectName, data) {
         let canvas = document.getElementById(objectName);
         if (canvas === null) {
@@ -6,6 +8,12 @@
         }
         let userId = data.user.login;
         let labels = Object.keys(data[objectName]);
+
+        /**
+         * The language index of <code>UNKNOWN_LANGUAGE</code>
+         * @type {Number}
+         */
+        let indexOfUnknownLanguage = -1;
         let values = Object.values(data[objectName]);
         let colors = createColorArray(labels.length);
         let tooltipInfo = null;
@@ -17,6 +25,7 @@
         if (["langRepoCount", "langStarCount", "langCommitCount"].indexOf(objectName) > -1) {
             // if the dataset is language-related, load color-profile
             labels.forEach((language, i) => colors[i] = languageColors[language]);
+            indexOfUnknownLanguage = labels.indexOf(UNKNOWN_LANGUAGE);
         }
         if (objectName === "repoCommitCount") {
             tooltipInfo = data[objectName + "Descriptions"]; // high quality programming
@@ -52,19 +61,26 @@
                             if (tooltipInfo !== null) {
                                 return wordWrap(tooltipInfo[data["labels"][tooltipItem["index"]]], 45);
                             }
+
+                            if (tooltipItem.index === indexOfUnknownLanguage) {
+                                return "No specific language";
+                            }
                         }
                     },
                 },
                 onClick: function (e, data) {
                     try {
                         let label = labels[data[0]._index];
+                        const isUnknownLanguage = (data[0]._index === indexOfUnknownLanguage);
                         let canvas = data[0]._chart.canvas.id;
                         if (canvas === "repoStarCount" || canvas === "repoCommitCount") {
                             window.open("https://github.com/" + userId + "/" + label, "_blank");
                             window.focus();
                         } else {
-                            window.open("https://github.com/" + userId + "?utf8=%E2%9C%93&tab=repositories&q=&type=source&language=" + encodeURIComponent(label), "_blank");
-                            window.focus();
+                            if (!isUnknownLanguage) {
+                                window.open("https://github.com/" + userId + "?utf8=%E2%9C%93&tab=repositories&q=&type=source&language=" + encodeURIComponent(label), "_blank");
+                                window.focus();
+                            }
                         }
                     } catch (ignored) {
                     }
