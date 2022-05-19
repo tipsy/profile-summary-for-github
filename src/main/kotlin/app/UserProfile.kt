@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import org.eclipse.egit.github.core.User
 import org.eclipse.egit.github.core.UserPlan
-import java.io.Serializable
 import java.util.Date
 
 data class UserProfile(
@@ -19,7 +18,7 @@ data class UserProfile(
     val repoStarCount: Map<String, Int>,
     val repoCommitCountDescriptions: Map<String, String?>,
     val repoStarCountDescriptions: Map<String, String?>
-) : Serializable {
+) {
     class Deserializer(valueClass: Class<*>?): StdDeserializer<UserProfile>(valueClass) {
         constructor(): this(null)
 
