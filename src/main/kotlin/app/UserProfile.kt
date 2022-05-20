@@ -1,11 +1,12 @@
 package app
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.reflect.TypeToken
 import org.eclipse.egit.github.core.User
 import org.eclipse.egit.github.core.UserPlan
+import java.lang.reflect.Type
 import java.util.Date
 
 data class UserProfile(
@@ -19,53 +20,52 @@ data class UserProfile(
     val repoCommitCountDescriptions: Map<String, String?>,
     val repoStarCountDescriptions: Map<String, String?>
 ) {
-    class Deserializer(valueClass: Class<*>?): StdDeserializer<UserProfile>(valueClass) {
-        constructor(): this(null)
-
-        override fun deserialize(jsonParser: JsonParser?, context: DeserializationContext?): UserProfile {
-            if (jsonParser == null || context == null) {
+    class Deserializer: JsonDeserializer<UserProfile> {
+        override fun deserialize(jsonElement: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): UserProfile {
+            if (jsonElement == null || context == null) {
                 throw RuntimeException()
             }
 
-            val userProfileNode: JsonNode = jsonParser.codec?.readTree(jsonParser) ?: throw RuntimeException()
+            val jsonObject = jsonElement.asJsonObject
 
-            val userNode = userProfileNode.get("user")
+            val userObject = jsonObject.getAsJsonObject("user")
             val user = User()
-            user.isHireable = userNode.get("hireable").booleanValue()
-            user.createdAt = Date(userNode.get("createdAt").longValue())
-            user.collaborators = userNode.get("collaborators").intValue()
-            user.diskUsage = userNode.get("diskUsage").intValue()
-            user.followers = userNode.get("followers").intValue()
-            user.following = userNode.get("following").intValue()
-            user.id = userNode.get("id").intValue()
-            user.ownedPrivateRepos = userNode.get("ownedPrivateRepos").intValue()
-            user.privateGists = userNode.get("privateGists").intValue()
-            user.publicGists = userNode.get("publicGists").intValue()
-            user.publicRepos = userNode.get("publicRepos").intValue()
-            user.totalPrivateRepos = userNode.get("totalPrivateRepos").intValue()
-            user.avatarUrl = userNode.get("avatarUrl").textValue()
-            user.blog = userNode.get("blog").textValue()
-            user.company = userNode.get("company").textValue()
-            user.email = userNode.get("email").textValue()
-            user.gravatarId = userNode.get("gravatarId").textValue()
-            user.htmlUrl = userNode.get("htmlUrl").textValue()
-            user.location = userNode.get("location").textValue()
-            user.login = userNode.get("login").textValue()
-            user.name = userNode.get("name").textValue()
-            user.type = userNode.get("type").textValue()
-            user.url = userNode.get("url").textValue()
+            user.isHireable = userObject.get("hireable").asBoolean
+            user.createdAt = Date(userObject.get("createdAt").asLong)
+            user.collaborators = userObject.get("collaborators").asInt
+            user.diskUsage = userObject.get("diskUsage").asInt
+            user.followers = userObject.get("followers").asInt
+            user.following = userObject.get("following").asInt
+            user.id = userObject.get("id").asInt
+            user.ownedPrivateRepos = userObject.get("ownedPrivateRepos").asInt
+            user.privateGists = userObject.get("privateGists").asInt
+            user.publicGists = userObject.get("publicGists").asInt
+            user.publicRepos = userObject.get("publicRepos").asInt
+            user.totalPrivateRepos = userObject.get("totalPrivateRepos").asInt
+            user.avatarUrl = if (userObject.get("avatarUrl").isJsonNull) null else userObject.get("avatarUrl").asString
+            user.blog = if (userObject.get("blog").isJsonNull) null else userObject.get("blog").asString
+            user.company = if (userObject.get("company").isJsonNull) null else userObject.get("company").asString
+            user.email = if (userObject.get("email").isJsonNull) null else userObject.get("email").asString
+            user.gravatarId = if (userObject.get("gravatarId").isJsonNull) null else userObject.get("gravatarId").asString
+            user.htmlUrl = if (userObject.get("htmlUrl").isJsonNull) null else userObject.get("htmlUrl").asString
+            user.location = if (userObject.get("location").isJsonNull) null else userObject.get("location").asString
+            user.login = if (userObject.get("login").isJsonNull) null else userObject.get("login").asString
+            user.name = if (userObject.get("name").isJsonNull) null else userObject.get("name").asString
+            user.type = if (userObject.get("type").isJsonNull) null else userObject.get("type").asString
+            user.url = if (userObject.get("url").isJsonNull) null else userObject.get("url").asString
+            user.plan = context.deserialize(userObject.get("plan"), UserPlan::class.java)
 
-            val planNode = userNode.get("plan")
-            user.plan = if (planNode.isNull) null else context.readValue(planNode.traverse(), UserPlan::class.java)
+            val mapType1 = object: TypeToken<Map<String, Int>>() {}.type
+            val mapType2 = object: TypeToken<Map<String, String?>>() {}.type
 
-            val quarterCommitCount: MutableMap<String, Int> = parseInt(userProfileNode.get("quarterCommitCount"))
-            val langRepoCount: MutableMap<String, Int> = parseInt(userProfileNode.get("langRepoCount"))
-            val langStarCount: MutableMap<String, Int> = parseInt(userProfileNode.get("langStarCount"))
-            val langCommitCount: MutableMap<String, Int> = parseInt(userProfileNode.get("langCommitCount"))
-            val repoCommitCount: MutableMap<String, Int> = parseInt(userProfileNode.get("repoCommitCount"))
-            val repoStarCount: MutableMap<String, Int> = parseInt(userProfileNode.get("repoStarCount"))
-            val repoCommitCountDescriptions: MutableMap<String, String?> = parseString(userProfileNode.get("repoCommitCountDescriptions"))
-            val repoStarCountDescriptions: MutableMap<String, String?> = parseString(userProfileNode.get("repoStarCountDescriptions"))
+            val quarterCommitCount: Map<String, Int> = context.deserialize(jsonObject.get("quarterCommitCount"), mapType1)
+            val langRepoCount: Map<String, Int> = context.deserialize(jsonObject.get("langRepoCount"), mapType1)
+            val langStarCount: Map<String, Int> = context.deserialize(jsonObject.get("langStarCount"), mapType1)
+            val langCommitCount: Map<String, Int> = context.deserialize(jsonObject.get("langCommitCount"), mapType1)
+            val repoCommitCount: Map<String, Int> = context.deserialize(jsonObject.get("repoCommitCount"), mapType1)
+            val repoStarCount: Map<String, Int> = context.deserialize(jsonObject.get("repoStarCount"), mapType1)
+            val repoCommitCountDescriptions: Map<String, String?> = context.deserialize(jsonObject.get("repoCommitCountDescriptions"), mapType2)
+            val repoStarCountDescriptions: Map<String, String?> = context.deserialize(jsonObject.get("repoStarCountDescriptions"), mapType2)
 
             return UserProfile(
                 user,
@@ -78,34 +78,6 @@ data class UserProfile(
                 repoCommitCountDescriptions,
                 repoStarCountDescriptions
             )
-        }
-
-        private fun parseInt(jsonNode: JsonNode): MutableMap<String, Int> {
-            val map: MutableMap<String, Int> = mutableMapOf()
-            if (!jsonNode.isNull) {
-                val fieldNames = jsonNode.fieldNames()
-                while (fieldNames.hasNext()) {
-                    val key = fieldNames.next()
-                    val value = jsonNode[key].intValue()
-                    map[key] = value
-                }
-            }
-
-            return map
-        }
-
-        private fun parseString(jsonNode: JsonNode): MutableMap<String, String?> {
-            val map: MutableMap<String, String?> = mutableMapOf()
-            if (!jsonNode.isNull) {
-                val fieldNames = jsonNode.fieldNames()
-                while (fieldNames.hasNext()) {
-                    val key = fieldNames.next()
-                    val value = jsonNode[key].textValue()
-                    map[key] = value
-                }
-            }
-
-            return map
         }
     }
 }

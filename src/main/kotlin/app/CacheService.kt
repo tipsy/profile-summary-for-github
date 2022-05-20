@@ -1,8 +1,7 @@
 package app
 
-import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.google.gson.GsonBuilder
 import org.slf4j.LoggerFactory
 import java.sql.DriverManager
 import java.time.LocalDateTime
@@ -50,13 +49,12 @@ object CacheService {
 
                     log.debug("cache hit: {}", json)
 
-                    val simpleModule = SimpleModule()
-                    simpleModule.addDeserializer(UserProfile::class.java, UserProfile.Deserializer())
+                    val gson = GsonBuilder()
+                        .registerTypeAdapter(UserProfile::class.java, UserProfile.Deserializer())
+                        .serializeNulls()
+                        .create()
 
-                    val objectMapper = jacksonObjectMapper()
-                    objectMapper.registerModule(simpleModule)
-
-                    return objectMapper.readValue<UserProfile>(json)
+                    return gson.fromJson(json, UserProfile::class.java)
                 }
             }
         }
