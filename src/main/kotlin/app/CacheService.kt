@@ -1,3 +1,5 @@
+@file:Suppress("SqlResolve")
+
 package app
 
 import com.fasterxml.jackson.core.JsonParser
