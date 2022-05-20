@@ -42,17 +42,17 @@ data class UserProfile(
             user.publicGists = userObject.get("publicGists").asInt
             user.publicRepos = userObject.get("publicRepos").asInt
             user.totalPrivateRepos = userObject.get("totalPrivateRepos").asInt
-            user.avatarUrl = if (userObject.get("avatarUrl").isJsonNull) null else userObject.get("avatarUrl").asString
-            user.blog = if (userObject.get("blog").isJsonNull) null else userObject.get("blog").asString
-            user.company = if (userObject.get("company").isJsonNull) null else userObject.get("company").asString
-            user.email = if (userObject.get("email").isJsonNull) null else userObject.get("email").asString
-            user.gravatarId = if (userObject.get("gravatarId").isJsonNull) null else userObject.get("gravatarId").asString
-            user.htmlUrl = if (userObject.get("htmlUrl").isJsonNull) null else userObject.get("htmlUrl").asString
-            user.location = if (userObject.get("location").isJsonNull) null else userObject.get("location").asString
-            user.login = if (userObject.get("login").isJsonNull) null else userObject.get("login").asString
-            user.name = if (userObject.get("name").isJsonNull) null else userObject.get("name").asString
-            user.type = if (userObject.get("type").isJsonNull) null else userObject.get("type").asString
-            user.url = if (userObject.get("url").isJsonNull) null else userObject.get("url").asString
+            user.avatarUrl = userObject.get("avatarUrl").asStringOrNull()
+            user.blog = userObject.get("blog").asStringOrNull()
+            user.company = userObject.get("company").asStringOrNull()
+            user.email = userObject.get("email").asStringOrNull()
+            user.gravatarId = userObject.get("gravatarId").asStringOrNull()
+            user.htmlUrl = userObject.get("htmlUrl").asStringOrNull()
+            user.location = userObject.get("location").asStringOrNull()
+            user.login = userObject.get("login").asStringOrNull()
+            user.name = userObject.get("name").asStringOrNull()
+            user.type = userObject.get("type").asStringOrNull()
+            user.url = userObject.get("url").asStringOrNull()
             user.plan = context.deserialize(userObject.get("plan"), UserPlan::class.java)
 
             val mapType1 = object: TypeToken<Map<String, Int>>() {}.type
@@ -78,6 +78,14 @@ data class UserProfile(
                 repoCommitCountDescriptions,
                 repoStarCountDescriptions
             )
+        }
+
+        private fun JsonElement.asStringOr(fallback: String?): String? {
+            return if (isJsonNull) fallback else asString
+        }
+
+        private fun JsonElement.asStringOrNull(): String? {
+            return asStringOr(null)
         }
     }
 }
