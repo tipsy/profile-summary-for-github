@@ -1,10 +1,11 @@
 package app
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.google.gson.GsonBuilder
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.LoggerFactory
 import java.sql.DriverManager
 import java.time.LocalDateTime
@@ -53,12 +54,13 @@ object CacheService {
 
                     log.debug("cache hit: {}", json)
 
-                    val gson = GsonBuilder()
-                        .registerTypeAdapter(Date::class.java, DateTypeAdapter())
-                        .serializeNulls()
-                        .create()
+                    val simpleModule = SimpleModule()
+                    simpleModule.addDeserializer(Date::class.java, DateDeserializer())
 
-                    return gson.fromJson(json, UserProfile::class.java)
+                    val objectMapper = jacksonObjectMapper()
+                    objectMapper.registerModule(simpleModule)
+
+                    return objectMapper.readValue<UserProfile>(json)
                 }
             }
         }
@@ -86,17 +88,9 @@ object CacheService {
         preparedStatement.execute()
     }
 
-    private class DateTypeAdapter: TypeAdapter<Date>() {
-        override fun write(out: JsonWriter, value: Date?) {
-            if (value == null) {
-                out.nullValue()
-            } else {
-                out.value(value.time)
-            }
-        }
-
-        override fun read(`in`: JsonReader): Date {
-            return Date(`in`.nextLong())
+    private class DateDeserializer: StdDeserializer<Date>(Date::class.java) {
+        override fun deserialize(jsonParser: JsonParser, context: DeserializationContext): Date {
+            return Date(jsonParser.readValueAs(Long::class.java))
         }
     }
 }
