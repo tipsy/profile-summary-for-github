@@ -2,10 +2,14 @@ package app
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.gson.GsonBuilder
+import com.google.gson.TypeAdapter
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
 import org.slf4j.LoggerFactory
 import java.sql.DriverManager
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
+import java.util.Date
 
 object CacheService {
     private const val urlToDb = "jdbc:h2:mem:userinfo"
@@ -50,7 +54,7 @@ object CacheService {
                     log.debug("cache hit: {}", json)
 
                     val gson = GsonBuilder()
-                        .registerTypeAdapter(UserProfile::class.java, UserProfile.Deserializer())
+                        .registerTypeAdapter(Date::class.java, DateTypeAdapter())
                         .serializeNulls()
                         .create()
 
@@ -80,5 +84,19 @@ object CacheService {
         preparedStatement.setString(2, json)
 
         preparedStatement.execute()
+    }
+
+    private class DateTypeAdapter: TypeAdapter<Date>() {
+        override fun write(out: JsonWriter, value: Date?) {
+            if (value == null) {
+                out.nullValue()
+            } else {
+                out.value(value.time)
+            }
+        }
+
+        override fun read(`in`: JsonReader): Date {
+            return Date(`in`.nextLong())
+        }
     }
 }
