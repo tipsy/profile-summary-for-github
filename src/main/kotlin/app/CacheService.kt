@@ -2,23 +2,17 @@
 
 package app
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.LoggerFactory
 import java.sql.DriverManager
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.Date
 
 object CacheService {
     private const val urlToDb = "jdbc:h2:mem:userinfo"
     private val log = LoggerFactory.getLogger(CacheService.javaClass)
     private val objectMapper = jacksonObjectMapper()
-        .registerModule(SimpleModule().addDeserializer(Date::class.java, DateDeserializer()))
 
     private fun createTableIfAbsent() {
         val connection = DriverManager.getConnection(urlToDb)
@@ -87,11 +81,5 @@ object CacheService {
         preparedStatement.setString(2, json)
 
         preparedStatement.execute()
-    }
-
-    private class DateDeserializer: StdDeserializer<Date>(Date::class.java) {
-        override fun deserialize(jsonParser: JsonParser, context: DeserializationContext): Date {
-            return Date(jsonParser.readValueAs(Long::class.java))
-        }
     }
 }
