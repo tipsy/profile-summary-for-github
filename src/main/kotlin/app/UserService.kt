@@ -25,7 +25,7 @@ object UserService {
     fun canLoadUser(user: String): Boolean {
         val remainingRequests by lazy { GhService.remainingRequests }
         val hasFreeRemainingRequests by lazy { remainingRequests > (freeRequestCutoff ?: remainingRequests) }
-        val userCache by lazy { CacheService.lookUpInCache(user) }
+        val userCache by lazy { CacheService.selectJsonFromDb(user) }
         return Config.unrestricted()
                 || (userCache != null)
                 || hasFreeRemainingRequests
