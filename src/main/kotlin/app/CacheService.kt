@@ -69,11 +69,7 @@ object CacheService {
         return null
     }
 
-    fun getUserFromCache(username: String): UserProfile? {
-        val json = lookUpInCache(username) ?: return null
-
-        return objectMapper.readValue<UserProfile>(json)
-    }
+    fun getUserFromCache(username: String) = lookUpInCache(username)?.let { json -> objectMapper.readValue<UserProfile>(json) }
 
     fun saveInCache(userProfile: UserProfile) {
         val connection = DriverManager.getConnection(urlToDb)
