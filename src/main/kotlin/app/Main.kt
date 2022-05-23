@@ -46,8 +46,11 @@ fun main() {
         get("/api/user/{user}") { ctx ->
             val user = ctx.pathParam("user")
             if (!UserService.userExists(user)) throw NotFoundResponse()
-            if (!UserService.canLoadUser(user)) throw BadRequestResponse("Can't load user")
-            ctx.json(UserService.getUserProfile(user))
+            try {
+                ctx.json(UserService.getUserIfCanLoad(user))
+            } catch (exception: UserService.UserNotLoadableException) {
+                throw BadRequestResponse(exception.message.toString())
+            }
         }
         get("/search", VueComponent("search-view"))
         get("/user/{user}", VueComponent("user-view"))

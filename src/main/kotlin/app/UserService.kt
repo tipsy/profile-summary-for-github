@@ -25,15 +25,32 @@ object UserService {
     fun canLoadUser(user: String): Boolean {
         val remainingRequests by lazy { GhService.remainingRequests }
         val hasFreeRemainingRequests by lazy { remainingRequests > (freeRequestCutoff ?: remainingRequests) }
-        val userCache by lazy { CacheService.selectJsonFromDb(user) }
+        val userCacheJson by lazy { CacheService.selectJsonFromDb(user) }
         return Config.unrestricted()
-                || (userCache != null)
+                || (userCacheJson != null)
                 || hasFreeRemainingRequests
                 || (remainingRequests > 0 && hasStarredRepo(user))
     }
 
-    fun getUserProfile(username: String): UserProfile {
-        return (CacheService.getUserFromCache(username) ?: generateUserProfile(username))
+    fun getUserIfCanLoad(username: String): UserProfile {
+        val remainingRequests by lazy { GhService.remainingRequests }
+        val hasFreeRemainingRequests by lazy { remainingRequests > (freeRequestCutoff ?: remainingRequests) }
+        val userCacheJson by lazy { CacheService.selectJsonFromDb(username) }
+
+        val canLoadUser = Config.unrestricted()
+            || (userCacheJson != null)
+            || hasFreeRemainingRequests
+            || (remainingRequests > 0 && hasStarredRepo(username))
+
+        if (canLoadUser) {
+            return if (userCacheJson == null) {
+                generateUserProfile(username)
+            } else {
+                CacheService.getUserFromJson(userCacheJson!!)
+            }
+        }
+
+        throw UserNotLoadableException()
     }
 
     private fun hasStarredRepo(username: String): Boolean {
@@ -99,4 +116,6 @@ object UserService {
 
         return userProfile;
     }
+
+    class UserNotLoadableException: RuntimeException("Can't load user")
 }
