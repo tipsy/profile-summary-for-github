@@ -25,8 +25,9 @@ object UserService {
     fun canLoadUser(user: String): Boolean {
         val remainingRequests by lazy { GhService.remainingRequests }
         val hasFreeRemainingRequests by lazy { remainingRequests > (freeRequestCutoff ?: remainingRequests) }
+        val userCache by lazy { CacheService.lookUpInCache(user) }
         return Config.unrestricted()
-                || (CacheService.lookUpInCache(user) != null)
+                || (userCache != null)
                 || hasFreeRemainingRequests
                 || (remainingRequests > 0 && hasStarredRepo(user))
     }
