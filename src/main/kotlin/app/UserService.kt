@@ -33,9 +33,7 @@ object UserService {
     }
 
     fun getUserProfile(username: String): UserProfile {
-        synchronized(username) {
-            return (CacheService.getUserFromCache(username) ?: generateUserProfile(username))
-        }
+        return (CacheService.getUserFromCache(username) ?: generateUserProfile(username))
     }
 
     private fun hasStarredRepo(username: String): Boolean {
