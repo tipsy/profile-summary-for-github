@@ -34,7 +34,7 @@ object UserService {
 
     fun getUserProfile(username: String): UserProfile {
         synchronized(username) {
-            return (CacheService.lookUpInCache(username) ?: generateUserProfile(username))
+            return (CacheService.getUserFromCache(username) ?: generateUserProfile(username))
         }
     }
 

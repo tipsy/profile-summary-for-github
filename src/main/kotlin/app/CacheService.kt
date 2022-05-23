@@ -33,7 +33,7 @@ object CacheService {
         )
     }
 
-    fun lookUpInCache(username: String): UserProfile? {
+    fun lookUpInCache(username: String): String? {
         val connection = DriverManager.getConnection(urlToDb)
 
         createTableIfAbsent()
@@ -58,7 +58,7 @@ object CacheService {
 
                     log.debug("cache hit: {}", json)
 
-                    return objectMapper.readValue<UserProfile>(json)
+                    return json
                 }
             }
         }
@@ -66,6 +66,12 @@ object CacheService {
         log.debug("cache miss for username: {}", username)
 
         return null
+    }
+
+    fun getUserFromCache(username: String): UserProfile? {
+        val json = lookUpInCache(username) ?: return null
+
+        return objectMapper.readValue<UserProfile>(json)
     }
 
     fun saveInCache(userProfile: UserProfile) {
