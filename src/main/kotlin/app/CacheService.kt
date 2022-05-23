@@ -17,6 +17,8 @@ import java.util.Date
 object CacheService {
     private const val urlToDb = "jdbc:h2:mem:userinfo"
     private val log = LoggerFactory.getLogger(CacheService.javaClass)
+    private val objectMapper = jacksonObjectMapper()
+        .registerModule(SimpleModule().addDeserializer(Date::class.java, DateDeserializer()))
 
     private fun createTableIfAbsent() {
         val connection = DriverManager.getConnection(urlToDb)
@@ -56,12 +58,6 @@ object CacheService {
 
                     log.debug("cache hit: {}", json)
 
-                    val simpleModule = SimpleModule()
-                    simpleModule.addDeserializer(Date::class.java, DateDeserializer())
-
-                    val objectMapper = jacksonObjectMapper()
-                    objectMapper.registerModule(simpleModule)
-
                     return objectMapper.readValue<UserProfile>(json)
                 }
             }
@@ -77,7 +73,7 @@ object CacheService {
 
         createTableIfAbsent()
 
-        val json = jacksonObjectMapper().writeValueAsString(userProfile)
+        val json = objectMapper.writeValueAsString(userProfile)
 
         val preparedStatement = connection.prepareStatement(
             "MERGE INTO userinfo (id, timestamp, data) KEY (id) " +
