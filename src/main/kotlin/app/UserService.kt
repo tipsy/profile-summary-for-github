@@ -26,25 +26,25 @@ object UserService {
     private fun hasFreeRemainingRequests(): Boolean = remainingRequests() > (freeRequestCutoff ?: remainingRequests())
 
     fun canLoadUser(user: String): Boolean {
-        val userCacheJson by lazy { CacheService.selectJsonFromDb(user) }
+        val userCacheJson = CacheService.selectJsonFromDb(user)
         return Config.unrestricted()
             || (userCacheJson != null)
-            || lazy { hasFreeRemainingRequests() }.value
-            || (lazy { remainingRequests() }.value > 0 && hasStarredRepo(user))
+            || hasFreeRemainingRequests()
+            || (remainingRequests() > 0 && hasStarredRepo(user))
     }
 
-    fun getUserIfCanLoad(username: String): UserProfile {
-        val userCacheJson by lazy { CacheService.selectJsonFromDb(username) }
+    fun getUserIfCanLoad(username: String): UserProfile? {
+        val userCacheJson = CacheService.selectJsonFromDb(username)
         val canLoadUser = Config.unrestricted()
             || (userCacheJson != null)
-            || lazy { hasFreeRemainingRequests() }.value
-            || (lazy { remainingRequests() }.value > 0 && hasStarredRepo(username))
+            || hasFreeRemainingRequests()
+            || remainingRequests() > 0 && hasStarredRepo(username)
 
         if (canLoadUser) {
             return if (userCacheJson == null) {
                 generateUserProfile(username)
             } else {
-                CacheService.getUserFromJson(userCacheJson!!)
+                CacheService.getUserFromJson(userCacheJson)
             }
         }
 
