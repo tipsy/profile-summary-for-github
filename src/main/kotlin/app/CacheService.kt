@@ -20,8 +20,8 @@ object CacheService {
 
         statement.execute(
             "CREATE TABLE IF NOT EXISTS userinfo (" +
-            "id VARCHAR2 PRIMARY KEY," +
-            "timestamp TIMESTAMP WITH TIME ZONE, " +
+            "id VARCHAR2 PRIMARY KEY, " +
+            "timestamp TIMESTAMP, " +
             "data JSON" +
             ")"
         )
