@@ -39,7 +39,7 @@ object CacheService {
             "FROM userinfo " +
             "WHERE id = ?"
         )
-        preparedStatement.setString(1, username)
+        preparedStatement.setString(1, username.lowercase())
 
         val result = preparedStatement.executeQuery()
         result.use {
