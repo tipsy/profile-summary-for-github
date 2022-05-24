@@ -2,20 +2,19 @@
 
 package app
 
+import app.util.HikariCpDataSource
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.LoggerFactory
-import java.sql.DriverManager
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 object CacheService {
-    private const val urlToDb = "jdbc:h2:mem:userinfo"
     private val log = LoggerFactory.getLogger(CacheService.javaClass)
     private val objectMapper = jacksonObjectMapper()
 
     private fun createTableIfAbsent() {
-        val connection = DriverManager.getConnection(urlToDb)
+        val connection = HikariCpDataSource.connection
         val statement = connection.createStatement()
 
         statement.execute(
@@ -28,7 +27,7 @@ object CacheService {
     }
 
     fun selectJsonFromDb(username: String): String? {
-        val connection = DriverManager.getConnection(urlToDb)
+        val connection = HikariCpDataSource.connection
 
         createTableIfAbsent()
 
@@ -66,7 +65,7 @@ object CacheService {
     fun getUserFromJson(json: String) = objectMapper.readValue<UserProfile>(json)
 
     fun saveInCache(userProfile: UserProfile) {
-        val connection = DriverManager.getConnection(urlToDb)
+        val connection = HikariCpDataSource.connection
 
         createTableIfAbsent()
 

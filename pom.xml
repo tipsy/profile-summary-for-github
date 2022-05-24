@@ -64,6 +64,11 @@
             <version>2.1.212</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>4.0.3</version>
+        </dependency>
     </dependencies>
 
     <build>
