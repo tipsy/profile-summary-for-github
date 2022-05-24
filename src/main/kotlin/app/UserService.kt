@@ -48,7 +48,7 @@ object UserService {
             }
         }
 
-        throw UserNotLoadableException()
+        return null
     }
 
     private fun hasStarredRepo(username: String): Boolean {
@@ -114,6 +114,4 @@ object UserService {
 
         return userProfile;
     }
-
-    class UserNotLoadableException: RuntimeException("Can't load user")
 }
