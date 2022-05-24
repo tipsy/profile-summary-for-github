@@ -77,7 +77,7 @@ object CacheService {
             "VALUES (?, CURRENT_TIMESTAMP(), ? FORMAT JSON)"
         )
 
-        preparedStatement.setString(1, userProfile.user.login)
+        preparedStatement.setString(1, userProfile.user.login.lowercase())
         preparedStatement.setString(2, json)
 
         preparedStatement.execute()
