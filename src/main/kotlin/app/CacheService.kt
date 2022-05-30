@@ -14,8 +14,7 @@ object CacheService {
     private val objectMapper = jacksonObjectMapper()
 
     private fun createTableIfAbsent() {
-        val connection = HikariCpDataSource.connection
-        val statement = connection.createStatement()
+        val statement = HikariCpDataSource.connection.createStatement()
 
         statement.execute(
             """
