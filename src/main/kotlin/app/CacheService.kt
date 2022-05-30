@@ -12,9 +12,10 @@ import java.time.temporal.ChronoUnit
 object CacheService {
     private val log = LoggerFactory.getLogger(CacheService.javaClass)
     private val objectMapper = jacksonObjectMapper()
+    private val connection = HikariCpDataSource.connection
 
     private fun createTableIfAbsent() {
-        val statement = HikariCpDataSource.connection.createStatement()
+        val statement = connection.createStatement()
 
         statement.execute(
             """
@@ -28,8 +29,6 @@ object CacheService {
     }
 
     fun selectJsonFromDb(username: String): String? {
-        val connection = HikariCpDataSource.connection
-
         createTableIfAbsent()
 
         val preparedStatement = connection.prepareStatement(
@@ -68,8 +67,6 @@ object CacheService {
     fun getUserFromJson(json: String) = objectMapper.readValue<UserProfile>(json)
 
     fun saveInCache(userProfile: UserProfile) {
-        val connection = HikariCpDataSource.connection
-
         createTableIfAbsent()
 
         val json = objectMapper.writeValueAsString(userProfile)
