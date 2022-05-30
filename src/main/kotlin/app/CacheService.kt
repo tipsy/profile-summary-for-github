@@ -48,10 +48,10 @@ object CacheService {
         result.use {
             // guaranteed to be at most one.
             if (it.next()) {
-                val timestamp = it.getTimestamp(1).toInstant()
+                val timestamp = it.getTimestamp("timestamp").toInstant()
                 val diffInHours = ChronoUnit.HOURS.between(timestamp, Instant.now())
                 if (diffInHours <= 6) {
-                    val json: String? = it.getString(2)
+                    val json: String? = it.getString("data")
                     if (json != null) {
                         log.debug("cache hit: {}", json)
                     }
