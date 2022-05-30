@@ -18,11 +18,13 @@ object CacheService {
         val statement = connection.createStatement()
 
         statement.execute(
-            "CREATE TABLE IF NOT EXISTS userinfo (" +
-            "id VARCHAR2 PRIMARY KEY, " +
-            "timestamp TIMESTAMP, " +
-            "data JSON" +
-            ")"
+            """
+            CREATE TABLE IF NOT EXISTS userinfo (
+            id VARCHAR2 PRIMARY KEY, 
+            timestamp TIMESTAMP, 
+            data JSON
+            )
+            """.trimIndent()
         )
     }
 
@@ -32,11 +34,13 @@ object CacheService {
         createTableIfAbsent()
 
         val preparedStatement = connection.prepareStatement(
-            "SELECT " +
-            "timestamp, " +
-            "data " +
-            "FROM userinfo " +
-            "WHERE id = ?"
+            """
+            SELECT 
+            timestamp, 
+            data 
+            FROM userinfo 
+            WHERE id = ?
+            """.trimIndent()
         )
         preparedStatement.setString(1, username.lowercase())
 
@@ -72,8 +76,10 @@ object CacheService {
         val json = objectMapper.writeValueAsString(userProfile)
 
         val preparedStatement = connection.prepareStatement(
-            "MERGE INTO userinfo (id, timestamp, data) KEY (id) " +
-            "VALUES (?, CURRENT_TIMESTAMP(), ? FORMAT JSON)"
+            """
+            MERGE INTO userinfo (id, timestamp, data) KEY (id) 
+            VALUES (?, CURRENT_TIMESTAMP(), ? FORMAT JSON)
+            """.trimIndent()
         )
 
         preparedStatement.setString(1, userProfile.user.login.lowercase())
