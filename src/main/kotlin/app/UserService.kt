@@ -90,7 +90,7 @@ object UserService {
 
         val quarterCommitCount = CommitCountUtil.getCommitsForQuarters(user, repoCommits)
         val langRepoCount = langRepoGrouping.eachCount().toList().sortedBy { (_, v) -> -v }.toMap()
-        val langStarCount = langRepoGrouping.fold(0) { acc, repo -> acc + repo.watchers }.toList().sortedBy { (_, v) -> -v }.toMap()
+        val langStarCount = langRepoGrouping.fold(0) { acc, repo -> acc + repo.watchers }.toList().filter { (_, v) -> v > 0 }.sortedBy { (_, v) -> -v }.toMap()
         val langCommitCount = langRepoGrouping.fold(0) { acc, repo -> acc + repoCommits[repo]!!.size }.toList().sortedBy { (_, v) -> -v }.toMap()
         val repoCommitCount = repoCommits.map { it.key.name to it.value.size }.toList().sortedBy { (_, v) -> -v }.take(10).toMap()
         val repoStarCount = repos.filter { it.watchers > 0 }.map { it.name to it.watchers }.sortedBy { (_, v) -> -v }.take(10).toMap()
