@@ -1,44 +1,46 @@
-# profile-summary-for-github
 
-## live at [https://profile-summary-for-github.com/](https://profile-summary-for-github.com/)
+# Profile Summary   [![Badge License]][License]
 
-## screenshot
-![screenshot](https://user-images.githubusercontent.com/1521451/34072014-4451dbf6-e280-11e7-90a7-32ad1f313541.PNG)
+*A tool to visualize your **GitHub** presence.*
 
-## run locally
-* `git clone https://github.com/tipsy/profile-summary-for-github.git`
-* `cd profile-summary-for-github`
-* `mvn install`
-* `java -jar target/profile-summary-for-github-jar-with-dependencies.jar`
+<br>
 
-If no api-token is set, you only get ~50 requests/hour
+<div align = center>
 
-To run the app with an api-token, first generate a token at
-[https://github.com/settings/tokens](https://github.com/settings/tokens),
-then launch the jar with the token:
+---
 
-* `java -Dapi-tokens=your-token -jar target/profile-summary-for-github-jar-with-dependencies.jar`
+[![Button Demo]][Demo]   
+[![Button Building]][Building]   
+[![Button Usage]][Usage] 
 
-You can use a comma-separated list of tokens to increase your rate-limit
+---
 
-You can build a profile summary for any GitHub profile using `-Dunrestricted=true`:
+<br>
 
-* `java -Dunrestricted=true -jar target/profile-summary-for-github-jar-with-dependencies.jar`
+<img
+    src = 'https://user-images.githubusercontent.com/1521451/34072014-4451dbf6-e280-11e7-90a7-32ad1f313541.PNG'
+    width = 800
+/>
 
-You can set when the app should require user-starring by passing `free-requests-cutoff`
-Passing 1000 will require the app to require starring if there are less than 1000 requests left:
+</div>
 
-* `java -Dfree-requests-cutoff=1000 -jar target/profile-summary-for-github-jar-with-dependencies.jar`
 
-You can enable Google Tag Manager on your instance by setting `gtm-id`:
+<!----------------------------------------------------------------------------->
 
-* `java -Dgtm-id=GTM-XXXXXX -jar target/profile-summary-for-github-jar-with-dependencies.jar`
+[Demo]: https://profile-summary-for-github.com/
 
-## run locally with docker
+[Building]: Documentation/Building.md
+[License]: LICENSE
+[Usage]: Documentation/Usage.md
 
-* `git clone https://github.com/tipsy/profile-summary-for-github.git`
-* `cd profile-summary-for-github`
-* `docker build -t profile-summary-for-github .`
-* `docker run -it --rm --name profile-summary-for-github -p 7070:7070 profile-summary-for-github`
-* OR with a token `docker run -it --rm --name profile-summary-for-github -p 7070:7070 -e "API_TOKENS=mytoken1,mytoken2" profile-summary-for-github`
-* browse to http://localhost:7070
+
+<!--------------------------------[ Badges ]----------------------------------->
+
+[Badge License]: https://img.shields.io/badge/License-Apache_2.0-D22128?style=for-the-badge
+
+
+<!-------------------------------[ Buttons ]----------------------------------->
+
+[Button Building]: https://img.shields.io/badge/Building-7952B3?style=for-the-badge&logoColor=white&logo=AzureArtifacts
+[Button Usage]: https://img.shields.io/badge/Usage-239120?style=for-the-badge&logoColor=white&logo=GitBook
+[Button Demo]: https://img.shields.io/badge/Demo-0091BD?style=for-the-badge&logoColor=white&logo=AppleArcade
