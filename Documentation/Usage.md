@@ -9,9 +9,13 @@
 
 *The access token to GitHubs API.*
 
+<br>
+
 ### Without
 
 If no api token is set, you only get `~50 requests / hour`.
+
+<br>
 
 ### With
 
