@@ -4,7 +4,7 @@
             <slot :requests-left="requestsLeft"></slot>
         </main>
         <footer>
-            GitHub profile summary is built with <a href="https://javalin.io">javalin</a> <small>(kotlin web framework)</small> and
+            GitHub profile summary is built with <a href="https://javalin.io">Javalin 5.0.0</a> <small>(kotlin web framework)</small> and
             <a href="http://www.chartjs.org/docs/latest/" target="_blank">chart.js</a> <small>(visualization)</small>.
             Source is on <a href="https://github.com/tipsy/profile-summary-for-github" target="_blank">GitHub</a>.
         </footer>

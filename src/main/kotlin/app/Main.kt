@@ -1,14 +1,12 @@
 package app
 
 import io.javalin.Javalin
-import io.javalin.core.compression.Brotli
-import io.javalin.core.compression.Gzip
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.NotFoundResponse
 import io.javalin.http.staticfiles.Location
 import io.javalin.http.util.NaiveRateLimit
-import io.javalin.plugin.rendering.vue.JavalinVue
-import io.javalin.plugin.rendering.vue.VueComponent
+import io.javalin.vue.VueComponent
+import io.javalin.http.queryParamAsClass
 import org.eclipse.jetty.server.HttpConnectionFactory
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
@@ -18,14 +16,12 @@ import java.util.concurrent.TimeUnit
 
 fun main() {
 
-    JavalinVue.optimizeDependencies = false
-
     val log = LoggerFactory.getLogger("app.MainKt")
     val app = Javalin.create {
-        it.enforceSsl = true
-        it.addStaticFiles("/public", Location.CLASSPATH)
-        it.compressionStrategy(Brotli(), Gzip())
-        it.server {
+        it.plugins.enableSslRedirects()
+        it.staticFiles.add("/public", Location.CLASSPATH)
+        it.compression.brotliAndGzip()
+        it.jetty.server {
             Server(QueuedThreadPool(200, 8, 120000)).apply {
                 connectors = arrayOf(ServerConnector(server).apply {
                     port = Config.getPort() ?: 7070
@@ -36,6 +32,7 @@ fun main() {
                 })
             }
         }
+        it.vue.optimizeDependencies = false
     }.apply {
         before("/api/*") { NaiveRateLimit.requestPerTimeUnit(it, 20, TimeUnit.MINUTES) }
         get("/api/can-load") { ctx ->
