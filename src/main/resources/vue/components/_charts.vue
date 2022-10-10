@@ -95,7 +95,7 @@
         });
 
         function createColorArray(length) {
-            const colors = ["#54ca76", "#f5c452", "#f2637f", "#9261f3", "#31a4e6", "#55cbcb"];
+            const colors = ["#ff0000", "#ff7300", "#feaf01", "#9261f3", "#ffed00", "#d6f210", "#53d729", "#1ca92f", "#2bcc75", "#22d8ae", "#5fb7d4", "#007ed7"];
             let array = [...Array(length).keys()].map(i => colors[i % colors.length]);
             // avoid first and last colors being the same
             if (length % colors.length === 1) {
