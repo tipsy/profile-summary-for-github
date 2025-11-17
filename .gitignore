@@ -11,3 +11,15 @@ buildNumber.properties
 .idea
 *.iml
 cache
+
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+*.log
+.env
+venv/
+env/
+.venv/
+staticfiles/
+media/

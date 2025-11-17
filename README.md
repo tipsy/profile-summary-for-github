@@ -1,5 +1,53 @@
 # profile-summary-for-github
 
+## Ứng Dụng Django Đơn Giản
+
+Dự án này hiện bao gồm một ứng dụng web Django đơn giản.
+
+### Chạy Ứng Dụng Django
+
+#### Yêu cầu:
+- Python 3.11+
+- pip
+
+#### Hướng dẫn:
+
+1. **Clone repository:**
+```bash
+git clone https://github.com/anhtudotinfo/profile-summary-for-github.git
+cd profile-summary-for-github
+```
+
+2. **Cài đặt dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+3. **Chạy migrations:**
+```bash
+python manage.py migrate
+```
+
+4. **Khởi động server:**
+```bash
+python manage.py runserver
+```
+
+5. **Truy cập ứng dụng:**
+- Trang chủ: http://127.0.0.1:8000/
+- Giới thiệu: http://127.0.0.1:8000/about/
+- Hello: http://127.0.0.1:8000/hello/
+- Admin: http://127.0.0.1:8000/admin/
+
+#### Tạo superuser cho admin (tùy chọn):
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+## Phiên Bản Java (Legacy)
+
 ## live at [https://profile-summary-for-github.com/](https://profile-summary-for-github.com/)
 
 ## screenshot

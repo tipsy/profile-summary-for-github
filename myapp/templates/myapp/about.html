@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới Thiệu - Ứng Dụng Django</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0c4b33;
+        }
+        .nav {
+            margin: 20px 0;
+        }
+        .nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #0c4b33;
+            padding: 8px 15px;
+            border: 1px solid #0c4b33;
+            border-radius: 4px;
+        }
+        .nav a:hover {
+            background-color: #0c4b33;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Giới Thiệu</h1>
+
+        <div class="nav">
+            <a href="{% url 'myapp:home' %}">Trang Chủ</a>
+            <a href="{% url 'myapp:about' %}">Giới Thiệu</a>
+            <a href="{% url 'myapp:hello' %}">Hello</a>
+        </div>
+
+        <h2>Về Ứng Dụng Này</h2>
+        <p>Đây là một ứng dụng web đơn giản được xây dựng bằng Django framework.</p>
+
+        <h3>Công Nghệ Sử Dụng:</h3>
+        <ul>
+            <li><strong>Django 5.0</strong> - Python web framework</li>
+            <li><strong>Python 3.11</strong> - Ngôn ngữ lập trình</li>
+            <li><strong>SQLite</strong> - Database mặc định</li>
+            <li><strong>HTML/CSS</strong> - Giao diện người dùng</li>
+        </ul>
+
+        <h3>Tính Năng Chính:</h3>
+        <ul>
+            <li>Hệ thống routing URL linh hoạt</li>
+            <li>Template engine mạnh mẽ</li>
+            <li>Admin interface tích hợp sẵn</li>
+            <li>ORM (Object-Relational Mapping)</li>
+        </ul>
+    </div>
+</body>
+</html>
