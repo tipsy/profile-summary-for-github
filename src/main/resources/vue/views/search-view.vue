@@ -2,7 +2,10 @@
     <app-frame v-slot="{requestsLeft}">
         <div class="search-screen">
             <h1>Enter GitHub username</h1>
-            <input type="text" name="q" placeholder="ex. 'tipsy'" v-model="query" autofocus @keydown.enter="search">
+            <div class="search-input-container">
+                <input type="text" name="q" placeholder="ex. 'tipsy'" v-model="query" autofocus @keydown.enter="search">
+            </div>
+            <button @click="search" :disabled="!query.trim()">View Profile</button>
             <div v-if="error && error.response.status === 404">
                 <h4>Can't find user <span class="search-term">{{failedQuery}}</span>. Check spelling.</h4>
             </div>
@@ -62,10 +65,41 @@
         font-size: 80%;
     }
 
+    .search-input-container {
+        width: 100%;
+        max-width: 300px;
+    }
+
     .search-screen input {
+        width: 100%;
         height: 40px;
         font-size: 18px;
         padding: 0 15px;
         border: 0;
+        border-radius: 4px;
+    }
+
+    .search-screen button {
+        margin-top: 20px;
+        height: 40px;
+        font-size: 18px;
+        padding: 0 25px;
+        border: 0;
+        line-height: 1;
+        background: #0082c8;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+    .search-screen button:hover:not(:disabled) {
+        background: #006ba1;
+    }
+
+    .search-screen button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        opacity: 0.6;
     }
 </style>

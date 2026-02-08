@@ -11,9 +11,10 @@
 
     html {
         font-size: 18px;
-        background: #eee9df;
+        background: radial-gradient(circle at 20% 20%, #f2ede4, #ebe0d0);
         padding: 60px 30px;
         overflow-y: scroll;
+        min-height: 100vh;
     }
 
     body {

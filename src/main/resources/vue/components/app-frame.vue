@@ -48,6 +48,7 @@
         padding: 10px;
         box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
         font-size: 16px;
+        border-radius: 4px;
     }
 
     @media (max-width: 480px) {
