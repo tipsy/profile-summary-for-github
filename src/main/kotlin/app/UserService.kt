@@ -25,6 +25,16 @@ object UserService {
     private fun remainingRequests(): Int = GhService.remainingRequests
     private fun hasFreeRemainingRequests(): Boolean = remainingRequests() > (freeRequestCutoff ?: remainingRequests())
 
+    // Lightweight check that doesn't consume GitHub API requests
+    // Used by /api/can-load to check before showing the spinner
+    // This is a permissive check - the actual strict check happens in getUserIfCanLoad
+    fun canLoadUserQuick(user: String): Boolean {
+        val userCacheJson = CacheService.selectJsonFromDb(user)
+        return Config.unrestricted()
+            || (userCacheJson != null)
+            || remainingRequests() > 0  // Just check if ANY requests are available
+    }
+
     fun canLoadUser(user: String): Boolean {
         val userCacheJson = CacheService.selectJsonFromDb(user)
         return Config.unrestricted()
@@ -52,7 +62,7 @@ object UserService {
     }
 
     private fun hasStarredRepo(username: String): Boolean {
-        val login = username.toLowerCase()
+        val login = username.lowercase()
         if (watchers.contains(login)) return true
         syncWatchers()
         return watchers.contains(login)
@@ -71,7 +81,7 @@ object UserService {
     }
 
     private fun addAllWatchers(pageNumber: Int) = try {
-        GhService.watchers.pageWatchers(repo, pageNumber, pageSize).first().forEach { watchers.add(it.login.toLowerCase()) }
+        GhService.watchers.pageWatchers(repo, pageNumber, pageSize).first().forEach { watchers.add(it.login.lowercase()) }
     } catch (e: Exception) {
         log.info("Exception while adding watchers", e)
     }

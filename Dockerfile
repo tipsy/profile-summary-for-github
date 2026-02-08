@@ -1,9 +1,9 @@
-FROM maven:3.5.2-jdk-8-alpine as maven-build
+FROM maven:3.9-eclipse-temurin-17-alpine as maven-build
 WORKDIR /app
 COPY . .
 RUN mvn verify
 
-FROM openjdk:8-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 RUN adduser \
  -h /var/github-summary \
  -D -u 1000 \

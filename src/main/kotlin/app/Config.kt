@@ -21,6 +21,6 @@ object Config {
 
     private fun getProperty(name: String): String? = getHerokuProperty(name) ?: System.getProperty(name)
 
-    private fun getHerokuProperty(envStr: String) = ProcessBuilder().environment()[envStr.toUpperCase().replace("-", "_")]
+    private fun getHerokuProperty(envStr: String) = ProcessBuilder().environment()[envStr.uppercase().replace("-", "_")]
 
 }

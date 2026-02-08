@@ -29,7 +29,7 @@ object GhService {
     val users: UserService get() = userServices.maxByOrNull { it.client.remainingRequests }!!
     val watchers: WatcherService get() = watcherServices.maxByOrNull { it.client.remainingRequests }!!
 
-    val remainingRequests: Int get() = clients.sumBy { it.remainingRequests }
+    val remainingRequests: Int get() = clients.sumOf { it.remainingRequests }
 
     // Allows for parallel iteration and O(1) put/remove
     private val clientSessions = ConcurrentHashMap<WsContext, Boolean>()

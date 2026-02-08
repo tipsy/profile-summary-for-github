@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- Set Javalin to INFO level -->
+    <logger name="io.javalin" level="INFO" />
+    
+    <!-- Set Jetty to WARN level to reduce noise -->
+    <logger name="org.eclipse.jetty" level="WARN" />
+</configuration>
+
