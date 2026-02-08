@@ -7,8 +7,6 @@
             </div>
             <div><i class="fa fa-fw fa-database"></i>{{ user.publicRepos }} public repos</div>
             <div><i class="fa fa-fw fa-clock-o"></i>Joined GitHub {{ timeAgo }}</div>
-            <div v-if="user.email"><i class="fa fa-fw fa-envelope"></i> {{ user.email }}</div>
-            <div v-if="user.company"><i class="fa fa-fw fa-building"></i>{{ user.company }}</div>
             <div><i class="fa fa-fw fa-external-link"></i><a :href="user.htmlUrl" target="_blank">View profile on GitHub</a></div>
         </div>
         <div class="chart-container commits-per-quarter">
@@ -71,8 +69,24 @@
     }
 
     @media (max-width: 480px) {
-        .user-info img,
-        .user-info .commits-per-quarter{
+        .user-info {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .user-info img {
+            width: 120px;
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .user-info .details {
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .user-info .commits-per-quarter {
             display: none;
         }
     }

@@ -69,6 +69,4 @@ fun main() {
         }
     }
 
-    UserService.syncWatchers()
-
 }

@@ -47,12 +47,14 @@
             options: {
                 animation: false,
                 rotation: (-0.40 * Math.PI),
+                maintainAspectRatio: true,
+                responsive: true,
                 legend: { // todo: fix duplication ?
                     position: window.innerWidth < 600 ? "bottom" : "left",
                     labels: {
-                        fontSize: window.innerWidth < 600 ? 10 : 12,
-                        padding: window.innerWidth < 600 ? 8 : 10,
-                        boxWidth: window.innerWidth < 600 ? 10 : 12
+                        fontSize: window.innerWidth < 480 ? 11 : window.innerWidth < 600 ? 10 : 12,
+                        padding: window.innerWidth < 480 ? 6 : window.innerWidth < 600 ? 8 : 10,
+                        boxWidth: window.innerWidth < 480 ? 12 : window.innerWidth < 600 ? 10 : 12
                     }
                 },
                 tooltips: {
@@ -87,9 +89,9 @@
                 },
                 onResize: function (instance) { // todo: fix duplication ?
                     instance.chart.options.legend.position = window.innerWidth < 600 ? "bottom" : "left";
-                    instance.chart.options.legend.labels.fontSize = window.innerWidth < 600 ? 10 : 12;
-                    instance.chart.options.legend.labels.padding = window.innerWidth < 600 ? 8 : 10;
-                    instance.chart.options.legend.labels.boxWidth = window.innerWidth < 600 ? 10 : 12;
+                    instance.chart.options.legend.labels.fontSize = window.innerWidth < 480 ? 11 : window.innerWidth < 600 ? 10 : 12;
+                    instance.chart.options.legend.labels.padding = window.innerWidth < 480 ? 6 : window.innerWidth < 600 ? 8 : 10;
+                    instance.chart.options.legend.labels.boxWidth = window.innerWidth < 480 ? 12 : window.innerWidth < 600 ? 10 : 12;
                 }
             }
         });

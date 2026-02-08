@@ -21,6 +21,11 @@
     }
 
     .la-square-jelly-box {
-        color: #38abe2;
+        color: #0082c8;
+    }
+
+    .loading-bouncer h2,
+    .loading-bouncer h3 {
+        color: #333;
     }
 </style>

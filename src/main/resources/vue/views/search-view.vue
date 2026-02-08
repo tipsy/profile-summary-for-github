@@ -75,8 +75,19 @@
         height: 40px;
         font-size: 18px;
         padding: 0 15px;
-        border: 0;
+        border: 2px solid transparent;
         border-radius: 4px;
+        transition: all 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-screen input:hover {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .search-screen input:focus {
+        border-color: #0082c8;
+        box-shadow: 0 2px 8px rgba(0, 130, 200, 0.2);
     }
 
     .search-screen button {
@@ -101,5 +112,38 @@
         background: #ccc;
         cursor: not-allowed;
         opacity: 0.6;
+    }
+
+    @media (max-width: 480px) {
+        .search-screen h1 {
+            font-size: 24px;
+            margin: 10px 0 20px 0;
+        }
+
+        .search-input-container {
+            max-width: 100%;
+            padding: 0 10px;
+        }
+
+        .search-screen input {
+            font-size: 16px;
+            height: 44px;
+            min-width: auto;
+        }
+
+        .search-screen button {
+            width: 100%;
+            max-width: 300px;
+            font-size: 16px;
+            height: 44px;
+        }
+
+        .search-screen .search-term {
+            font-size: 90%;
+        }
+
+        .search-screen > div {
+            padding: 0 20px;
+        }
     }
 </style>

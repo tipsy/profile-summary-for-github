@@ -48,4 +48,23 @@
             opacity: 1;
         }
     }
+
+    @media (max-width: 480px) {
+        html {
+            padding: 30px 15px;
+            font-size: 16px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        h3 {
+            font-size: 18px;
+        }
+    }
 </style>

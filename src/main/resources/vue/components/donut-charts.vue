@@ -84,6 +84,23 @@
     }
 
     @media (max-width: 480px) {
+        .chart-row {
+            padding-bottom: 20px;
+        }
+
+        .chart-container {
+            padding: 15px 10px;
+        }
+
+        .chart-container h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .chart-container canvas {
+            max-height: 300px;
+        }
+
         footer {
             display: none;
         }

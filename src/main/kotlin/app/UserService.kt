@@ -10,11 +10,7 @@ import kotlin.streams.toList
 
 object UserService {
 
-    private const val pageSize = 100
     private val log = LoggerFactory.getLogger("app.UserCtrlKt")
-    private val repo = GhService.repos.getRepository("tipsy", "profile-summary-for-github")
-    private val watchers = ConcurrentHashMap.newKeySet<String>()
-    private val freeRequestCutoff = Config.freeRequestCutoff()
 
     fun userExists(user: String): Boolean = try {
         GhService.users.getUser(user) != null
@@ -23,32 +19,21 @@ object UserService {
     }
 
     private fun remainingRequests(): Int = GhService.remainingRequests
-    private fun hasFreeRemainingRequests(): Boolean = remainingRequests() > (freeRequestCutoff ?: remainingRequests())
 
     // Lightweight check that doesn't consume GitHub API requests
     // Used by /api/can-load to check before showing the spinner
-    // This is a permissive check - the actual strict check happens in getUserIfCanLoad
     fun canLoadUserQuick(user: String): Boolean {
         val userCacheJson = CacheService.selectJsonFromDb(user)
         return Config.unrestricted()
             || (userCacheJson != null)
-            || remainingRequests() > 0  // Just check if ANY requests are available
-    }
-
-    fun canLoadUser(user: String): Boolean {
-        val userCacheJson = CacheService.selectJsonFromDb(user)
-        return Config.unrestricted()
-            || (userCacheJson != null)
-            || hasFreeRemainingRequests()
-            || (remainingRequests() > 0 && hasStarredRepo(user))
+            || remainingRequests() > 0
     }
 
     fun getUserIfCanLoad(username: String): UserProfile? {
         val userCacheJson = CacheService.selectJsonFromDb(username)
         val canLoadUser = Config.unrestricted()
             || (userCacheJson != null)
-            || hasFreeRemainingRequests()
-            || remainingRequests() > 0 && hasStarredRepo(username)
+            || remainingRequests() > 0
 
         if (canLoadUser) {
             return if (userCacheJson == null) {
@@ -59,31 +44,6 @@ object UserService {
         }
 
         return null
-    }
-
-    private fun hasStarredRepo(username: String): Boolean {
-        val login = username.lowercase()
-        if (watchers.contains(login)) return true
-        syncWatchers()
-        return watchers.contains(login)
-    }
-
-    fun syncWatchers() {
-        val realWatchers = repo.watchers
-        if (watchers.size < realWatchers) {
-            val startPage = watchers.size / pageSize + 1
-            val lastPage = realWatchers / pageSize + 1
-            if (startPage == lastPage)
-                addAllWatchers(lastPage)
-            else
-                IntStream.rangeClosed(startPage, lastPage).parallel().forEach { page -> addAllWatchers(page) }
-        }
-    }
-
-    private fun addAllWatchers(pageNumber: Int) = try {
-        GhService.watchers.pageWatchers(repo, pageNumber, pageSize).first().forEach { watchers.add(it.login.lowercase()) }
-    } catch (e: Exception) {
-        log.info("Exception while adding watchers", e)
     }
 
     private fun commitsForRepo(repo: Repository): List<RepositoryCommit> = try {
